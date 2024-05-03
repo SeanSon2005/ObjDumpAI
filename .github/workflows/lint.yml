@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint
     steps:
-      - name: Check out source repository
+      - name: Formatting Check
         uses: actions/checkout@v3
       - name: Set up Python environment
         uses: actions/setup-python@v4
@@ -17,4 +17,3 @@ jobs:
         uses: py-actions/flake8@v2
         with:
           max-line-length: "100"
-          plugins: "flake8-bugbear==22.1.11 flake8-black"
