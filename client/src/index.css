@@ -78,7 +78,7 @@ h2 {
   font-family: "Papyrus";
   color: #111b77;
   display: block;
-  font-size: 1.8em;
+  font-size: 2em;
   margin-top: 1em;
   margin-bottom: 1em;
   margin-left: 0;
@@ -106,13 +106,13 @@ h4 {
   margin-left: 0;
   margin-right: 0;
   font-weight: bold;
-  padding-bottom: 10px;
-
+  padding-bottom: 90px;
+  border-bottom: 1px solid #4364d9;
 }
 h5 { 
   font-family: "Quicksand";
   display: block;
-  font-size: 2em;
+  font-size: 1.4em;
   margin-top: 1em;
   margin-bottom: 1em;
   margin-left: 0;
@@ -120,8 +120,4 @@ h5 {
   font-weight: bold;
   color: #0d0d0d;
 
-}
-
-spacer {
-  padding-bottom: 100px;
 }
