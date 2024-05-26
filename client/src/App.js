@@ -54,6 +54,9 @@ class App extends Component {
                         Last Modified:{" "}
                         {this.state.selectedFile.lastModifiedDate.toDateString()}
                     </p>
+                    <button onClick={this.onFileUpload}>
+                        Upload!
+                    </button>
                 </div>
             );
         } else {
@@ -80,9 +83,7 @@ class App extends Component {
                         type="file"
                         onChange={this.onFileChange}
                     />
-                    <button onClick={this.onFileUpload}>
-                        Upload!
-                    </button></center>
+                    </center>
                
                 </div>
                 {this.fileData()}
