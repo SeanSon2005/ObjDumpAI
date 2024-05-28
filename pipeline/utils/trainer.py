@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 from torchvision.utils import make_grid
 
 from .config import Config
-from .logger import MetricTracker, TensorboardWriter, get_logger
+from .logger import Logger
 
 
 class BaseTrainer:
@@ -56,12 +56,7 @@ class BaseTrainer:
         self.start_epoch = 1
 
         # setup logger and visualization writer instance
-        self.logger = get_logger(
-            name="trainer", verbosity=config["trainer"]["verbosity"]
-        )
-        self.writer = TensorboardWriter(
-            config.log_dir, self.logger, enabled=cfg_trainer["tensorboard"]
-        )
+        self.logger = Logger
         self.log_step: int = cfg_trainer["log_step"]
         self.save_period: int = cfg_trainer["save_period"]
         self.checkpoint_dir = config.save_dir
@@ -179,8 +174,8 @@ class BaseTrainer:
             self.logger.info("Best checkpoint saved: %s ...", best_fname)
 
 
-class MnistTrainer(BaseTrainer):
-    """Custom trainer for the MNIST dataset, validation included.
+class CustomTrainer(BaseTrainer):
+    """Custom trainer for any dataset, validation included.
 
     Attributes:
         config (Config): Configuration object.
@@ -219,12 +214,6 @@ class MnistTrainer(BaseTrainer):
         # data loader and metric configuration
         self.train_loader = train_data_loader
         self.valid_loader = valid_data_loader
-        self.train_metrics = MetricTracker(
-            "loss", *[m.__name__ for m in metric_fns], writer=self.writer
-        )
-        self.valid_metrics = MetricTracker(
-            "loss", *[m.__name__ for m in metric_fns], writer=self.writer
-        )
         self.n_batch = len(self.train_loader)
 
     def _train_epoch(self, epoch: int) -> dict:
