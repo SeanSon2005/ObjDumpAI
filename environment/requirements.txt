@@ -1,6 +1,9 @@
 torch --index-url https://download.pytorch.org/whl/torch/
 torchvision --index-url https://download.pytorch.org/whl/torchvision/
 torchaudio --index-url https://download.pytorch.org/whl/torchaudio/
+autodistill
+autodistill-grounding-dino
+supervision
 ultralytics
 django
 flake8
