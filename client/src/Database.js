@@ -1,14 +1,100 @@
-import React, { useState } from "react"; 
+/*import React, { useState } from "react"; 
 import Spacer from './Spacer';
 
+/*
+import React, { useState, useEffect } from 'react';
 
 function Database() {
+  const [images, setImages] = useState([]);
 
-    return (
-        <div className="content"> 
-          <h1>Database</h1>
+  useEffect(() => {
+    // Fetch image data from your API or database (e.g., using fetch, Axios)
+    fetch('/api/images') // Replace with your actual API endpoint
+      .then(res => res.json())
+      .then(data => setImages(data));
+  }, []);
+
+  const handleLike = (imageId) => {
+    // Update the like count for the image in your database
+    // ... and update the 'images' state accordingly
+    setImages(prevImages => 
+      prevImages.map(img => 
+        img.id === imageId ? { ...img, likes: img.likes + 1 } : img
+      )
+    );
+  };
+
+  return (
+    <div className="image-gallery">
+
+    <h6> <center>Database</center></h6>
+
+      {images.map(image => (
+        <div key={image.id} className="image-card">
+          <img src={image.url} alt={image.description} />
+          <div className="image-info">
+            <p>{image.description}</p>
+            <button onClick={() => handleLike(image.id)}>
+              Like ({image.likes})
+            </button>
+          </div>
         </div>
-      );
-    }
-    
-    export default Database; 
+      ))}
+    </div>
+  );
+}
+
+export default Database;
+*/
+
+
+import React, { useState, useEffect } from 'react';
+import Spacer from './Spacer';
+
+function ImageGallery() {
+  const [imageUrls, setImageUrls] = useState([]);
+
+  useEffect(() => {
+    // Provide an initial set of image URLs here
+    const initialUrls = [
+      'https://wallpapercave.com/wp/wp9637279.jpg',
+      '',
+      // ... more image URLs
+    ];
+
+    setImageUrls(initialUrls);
+  }, []); 
+
+  const [likes, setLikes] = useState({}); // Track likes per image
+
+  const handleLike = (url) => {
+    setLikes(prevLikes => ({
+      ...prevLikes,
+      [url]: (prevLikes[url] || 0) + 1 
+    }));
+  };
+
+  return (
+    <div className="content"> 
+          <h6> <center>Database</center></h6>
+          <Spacer size={30} />
+
+    <div className="image-gallery">
+      { imageUrls
+        .filter(url => url !== '') 
+         .map((url, index) => (
+        <div key={index} className="image-card">
+          <img src={url} alt={`Image from ${url}`} />
+          <Spacer size={30} />
+          <center><button className="button" onClick={() => handleLike(url)}>
+            Like ({likes[url] || 0})
+          </button></center>
+        </div>
+      ))
+      }
+    </div>
+    </div>
+  );
+}
+
+export default ImageGallery;
