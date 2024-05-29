@@ -6,10 +6,9 @@ const Navbar = () => {
           <a href="/">Home</a>
 
           <a href="/database" style={{ 
-            color: '#1064b9', 
           }}>Upload Database</a>
 
-          <a href="/login" style={{ 
+          <a href="/login" class="button" style={{ 
             color: 'white', 
             backgroundColor: '#007FFF',
             borderRadius: '10px' 
