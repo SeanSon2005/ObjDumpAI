@@ -8,10 +8,6 @@ body {
     -moz-osx-font-smoothing: grayscale;
   }
   
-  .testButton {
-    margin-top: 20px;
-  }
-  
   small {
     display: block;
     font-size: 12px;
@@ -19,12 +15,22 @@ body {
   
   h1 {
     font-size: 2em;
-    border-bottom: 1px solid rgb(248, 248, 248);
     margin-bottom: 25px;
   }
   
-  .wrapper{
+  .wrapper {
     width: 420px;
     background: slateblue;
     color: #fff;
+  }
+
+  .wrapper {
+    width: fit-content;
+    max-width: 900px;
+    height: fit-content;
+    border: 2px solid rgb(72, 165, 227);
+    margin-top: 10px;
+    margin-left: 10px;
+    background: white;
+    text-align: left;
   }
