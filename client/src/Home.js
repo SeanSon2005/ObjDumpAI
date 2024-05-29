@@ -3,11 +3,9 @@ import axios from "axios";
 import DisplayAnImage from './DisplayAnImage';
 import Spacer from './Spacer';
 
-
 function Home() {
   const [selectedFile, setSelectedFile] = useState(null); 
   const [description] = useState("A towering skyscraper rises above the vast city skyline");
-
 
   const onFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -26,9 +24,12 @@ function Home() {
           <div>
             <h2>File Details:</h2>
             <p>File Name: {selectedFile.name}</p>
+            <Spacer size={10} />
             <p>File Type: {selectedFile.type}</p>
+            <Spacer size={10} />
             <p>Last Modified: {selectedFile.lastModifiedDate.toDateString()}</p>
-            <button onClick={onFileUpload}>Upload!</button>
+            <Spacer size={40} />
+            <button class="button" onClick={onFileUpload}>Upload!</button>
           </div>
         </center>
       );
@@ -49,17 +50,34 @@ function Home() {
         <div>{DisplayAnImage()}</div> 
       </div>
 
-      <h3><center>AI Generated Image Description: </center></h3>
+      <Spacer size={26} />
+
+      <h3><center>Example AI Generated Image Description: </center></h3>
       <h4><center>{description}</center></h4> 
 
       <Spacer size={56} />
-      <h2><center>Try it Yourself:</center></h2>
-      <h5><center>Image Upload</center></h5>
+
+      <h1><center>Try it Yourself:</center></h1>
+
+      <Spacer size={5} />
+
+      <h2><center>Image Upload</center></h2>
+      
       <center>
-        <input type="file" onChange={onFileChange} />
-        {fileData()} 
-      </center>
+      <label htmlFor="fileInput" class="button">
+       Choose File
+     </label>
+     <input
+       type="file"
+       id="fileInput"
+       onChange={onFileChange}
+       style={{ display: 'none' }}
+     />
+     {fileData()}
+</center>
+
     </div>
+    
   );
 }
 
