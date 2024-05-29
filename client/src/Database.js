@@ -1,53 +1,3 @@
-/*import React, { useState } from "react"; 
-import Spacer from './Spacer';
-
-/*
-import React, { useState, useEffect } from 'react';
-
-function Database() {
-  const [images, setImages] = useState([]);
-
-  useEffect(() => {
-    // Fetch image data from your API or database (e.g., using fetch, Axios)
-    fetch('/api/images') // Replace with your actual API endpoint
-      .then(res => res.json())
-      .then(data => setImages(data));
-  }, []);
-
-  const handleLike = (imageId) => {
-    // Update the like count for the image in your database
-    // ... and update the 'images' state accordingly
-    setImages(prevImages => 
-      prevImages.map(img => 
-        img.id === imageId ? { ...img, likes: img.likes + 1 } : img
-      )
-    );
-  };
-
-  return (
-    <div className="image-gallery">
-
-    <h6> <center>Database</center></h6>
-
-      {images.map(image => (
-        <div key={image.id} className="image-card">
-          <img src={image.url} alt={image.description} />
-          <div className="image-info">
-            <p>{image.description}</p>
-            <button onClick={() => handleLike(image.id)}>
-              Like ({image.likes})
-            </button>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export default Database;
-*/
-
-
 import React, { useState, useEffect } from 'react';
 import Spacer from './Spacer';
 
@@ -55,7 +5,7 @@ var name = "[name goes here]";
 var uploader = "[username goes here]";
 var description = "[description goes here]";
 
-function ImageGallery() {
+function Database() {
   const [imageUrls, setImageUrls] = useState([]);
 
   useEffect(() => {
@@ -106,4 +56,55 @@ function ImageGallery() {
   );
 }
 
-export default ImageGallery;
+export default Database;
+
+// Previous version of Database:
+
+/*import React, { useState } from "react"; 
+import Spacer from './Spacer';
+
+/*
+import React, { useState, useEffect } from 'react';
+
+function Database() {
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    // Fetch image data from your API or database (e.g., using fetch, Axios)
+    fetch('/api/images') // Replace with your actual API endpoint
+      .then(res => res.json())
+      .then(data => setImages(data));
+  }, []);
+
+  const handleLike = (imageId) => {
+    // Update the like count for the image in your database
+    // ... and update the 'images' state accordingly
+    setImages(prevImages => 
+      prevImages.map(img => 
+        img.id === imageId ? { ...img, likes: img.likes + 1 } : img
+      )
+    );
+  };
+
+  return (
+    <div className="image-gallery">
+
+    <h6> <center>Database</center></h6>
+
+      {images.map(image => (
+        <div key={image.id} className="image-card">
+          <img src={image.url} alt={image.description} />
+          <div className="image-info">
+            <p>{image.description}</p>
+            <button onClick={() => handleLike(image.id)}>
+              Like ({image.likes})
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default Database;
+*/
