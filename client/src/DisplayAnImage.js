@@ -4,7 +4,7 @@ import {View, Image, StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   container: {
     paddingTop: 50,
-    paddingLeft: 0,
+    paddingLeft: 100,
   },
   tinyLogo: {
     width: 600,
@@ -17,14 +17,12 @@ const styles = StyleSheet.create({
 const DisplayAnImage = () => {
   return (
     <View style={styles.container}>
-      
       <Image
         style={styles.tinyLogo} class="center" 
         source={{
           uri: 'https://wallpapercave.com/wp/wp9637279.jpg',
         }}
       />
-      
     </View>
   );
 };
