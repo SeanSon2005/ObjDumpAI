@@ -1,6 +1,7 @@
 import './Login.css';
 import React, { useState } from 'react';
 import Signup from './SignUp';
+import Spacer from './Spacer';
 
 export default function Login() {
     const [showLoginForm, setShowLoginForm] = useState(true);
@@ -11,28 +12,38 @@ export default function Login() {
 
     return (
     <div className="login-wrapper">
+        
         {showLoginForm && (
             <>
-                <h1>Login</h1>
-                <form>
+                <h6><center>Welcome Back!</center></h6>
+                <Spacer size={1} />
+
+                <center><form>
                 <label>
-                <p>Username</p>
+                <h2>Username</h2>
                 <input type="text" placeholder="Username" required />
+                
+                <h2>Password</h2>
+                <input type="text" placeholder="Password" required />
                 </label>
-                <label>
-                <p>Password</p>
-                <input type="password" placeholder="Password" required />
-                </label>
+                <Spacer size={50} />
+
                 <div>
-                    <button type="submit">Submit</button>
-                    <div className="register-link">
-                        Don't have an account? <button onClick={handleRegister}>Register</button>
+                    <button class="button" type="submit">Submit</button>
+
+                    <Spacer size={90} />
+
+                    <div className ="register-link"> <h1>Don't have an account?</h1> 
+                          <Spacer size={20} />
+                    <button class="button" onClick={handleRegister}>Register</button>
                     </div>
                 </div>
-                </form>
+                </form></center>
             </>
         )}
         {!showLoginForm && <Signup />}
+        
     </div>
+
     );
 }
