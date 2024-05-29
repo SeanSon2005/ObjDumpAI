@@ -51,6 +51,10 @@ export default Database;
 import React, { useState, useEffect } from 'react';
 import Spacer from './Spacer';
 
+var name = "[name goes here]";
+var uploader = "[username goes here]";
+var description = "[description goes here]";
+
 function ImageGallery() {
   const [imageUrls, setImageUrls] = useState([]);
 
@@ -84,7 +88,12 @@ function ImageGallery() {
         .filter(url => url !== '') 
          .map((url, index) => (
         <div key={index} className="image-card">
+          
           <img src={url} alt={`Image from ${url}`} />
+          <Spacer size={30} />
+          <h3><center>Image Name:  {name}</center></h3>
+          <h3><center>Uploader:  {uploader}</center></h3>
+          <h3><center>AI Generated Description:  {description}</center></h3>
           <Spacer size={30} />
           <center><button className="button" onClick={() => handleLike(url)}>
             Like ({likes[url] || 0})
