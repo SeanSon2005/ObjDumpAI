@@ -1,6 +1,7 @@
 import './Login.css';
 import React, { useState } from 'react';
 import Login from './Login';
+import Spacer from './Spacer';
 
 export default function Signup() {
     const [showRegisterForm, setShowRegisterForm] = useState(true);
@@ -39,11 +40,13 @@ export default function Signup() {
         <div className="signup-wrapper">
             {showRegisterForm && (
                 <>
-                    <h1>Sign Up</h1>
+                    <h1><center>Sign Up/Register</center></h1>
+                    <Spacer size={20} />
+                    <center>
                     <form onSubmit={handleDone}>
                         <label>
-                            <p>Full Name</p>
-                            <input
+                            <p><center>First and Last Name</center></p>
+                           <input
                                 type="text"
                                 placeholder="Full Name"
                                 value={fullName}
@@ -52,7 +55,7 @@ export default function Signup() {
                             />
                         </label>
                         <label>
-                            <p>Username</p>
+                            <p><center>Username</center></p>
                             <input
                                 type="text"
                                 placeholder="Username"
@@ -62,9 +65,9 @@ export default function Signup() {
                             />
                         </label>
                         <label>
-                            <p>Password</p>
+                            <p><center>Password</center></p>
                             <input
-                                type="password"
+                                type="text"
                                 placeholder="Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -72,19 +75,21 @@ export default function Signup() {
                             />
                         </label>
                         <label>
-                            <p>Confirm Password</p>
+                            <p><center>Confirm Password</center></p>
                             <input
-                                type="password"
+                                type="text"
                                 placeholder="Confirm Password"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 required
                             />
                         </label>
-                        <div>
-                            <button type="submit">Submit</button>
+                        <div>                 
+                               <Spacer size={40} />
+                            <button class="button" type="submit">Submit</button>
                         </div>
                     </form>
+                    </center>
                 </>
             )}
             {!showRegisterForm && same && <Login />}
