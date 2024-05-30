@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from './axiosConfig';
 import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -23,6 +23,7 @@ const Login = () => {
         .then(response => {
             console.log(response.data);
             localStorage.setItem('token', response.data.token);
+			localStorage.setItem('username', username);
             navigate('/profile');
         })
         .catch(error => {
@@ -35,26 +36,28 @@ const Login = () => {
     };
 
     return (
-        <div>
+		<center><div>
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Username:</label>
+                <label>
+                    <p>Username:</p>
                     <input 
                         type="text" 
                         value={username} 
                         onChange={(e) => setUsername(e.target.value)} 
                     />
-                </div>
-                <div>
-                    <label>Password:</label>
+                </label>
+                <label>
+                    <p>Password: </p>
                     <input 
                         type="password" 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} 
                     />
-                </div>
+                </label>
+				<br/><br/>
                 <button type="submit">Login</button>
+				<br/><br/>
             </form>
             {error && (
                 <div style={{ color: 'red' }}>
@@ -63,7 +66,7 @@ const Login = () => {
                     ))}
                 </div>
             )}
-        </div>
+        </div></center>
     );
 };
 

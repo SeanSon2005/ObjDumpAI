@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from './axiosConfig';
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -47,42 +47,44 @@ const Register = () => {
     };
 
     return (
-        <div>
+        <center><div>
             <h2>Register</h2>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Username:</label>
+                <label>
+                    <p>Username:</p>
                     <input 
                         type="text" 
                         value={username} 
                         onChange={(e) => setUsername(e.target.value)} 
                     />
-                </div>
-                <div>
-                    <label>Password:</label>
+                </label>
+                <label>
+                    <p>Password:</p>
                     <input 
                         type="password" 
                         value={password} 
                         onChange={(e) => setPassword(e.target.value)} 
                     />
-                </div>
-                <div>
-                    <label>Confirm Password:</label>
+                </label>
+                <label>
+                    <p>Confirm Password:</p>
                     <input 
                         type="password" 
                         value={confirmPassword} 
                         onChange={(e) => setConfirmPassword(e.target.value)} 
                     />
-                </div>
-                <div>
-                    <label>Email:</label>
+                </label>
+                <label>
+                    <p>Email:</p>
                     <input 
                         type="email" 
                         value={email} 
                         onChange={(e) => setEmail(e.target.value)} 
                     />
-                </div>
+                </label>
+				<br/><br/>
                 <button type="submit">Register</button>
+				<br/><br/>
             </form>
             {error && (
                 <div style={{ color: 'red' }}>
@@ -96,7 +98,7 @@ const Register = () => {
                     {success}
                 </div>
             )}
-        </div>
+        </div></center>
     );
 };
 
