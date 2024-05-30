@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Photo
+from .models import Photo, Dataset
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,5 +15,13 @@ class UserSerializer(serializers.ModelSerializer):
 class PhotoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
-        fields = ["id", "user", "image", "label"]
+        fields = ["id", "dataset", "image", "label"]
+        read_only_fields = ["dataset"]
+
+class DatasetSerializer(serializers.ModelSerializer):
+    photos = PhotoSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Dataset
+        fields = ["id", "user", "name", "photos"]
         read_only_fields = ["user"]
