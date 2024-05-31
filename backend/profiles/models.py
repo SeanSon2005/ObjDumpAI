@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-import time
+from .storage import ProtectedMediaStorage
 
 def user_directory_path(instance, filename):
     return f"{instance.dataset.user.id}/{instance.dataset.id}/{filename}"
@@ -14,8 +14,8 @@ class Dataset(models.Model):
 
 class Photo(models.Model):
     dataset = models.ForeignKey(Dataset, related_name="photos", on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=user_directory_path)
-    label = models.CharField(max_length=255, blank=True, default="unlabeled")
+    image = models.ImageField(upload_to=user_directory_path, storage=ProtectedMediaStorage)
+    label = models.CharField(max_length=255, blank=True, default="")
 
     def __str__(self):
         return f"{self.id}"

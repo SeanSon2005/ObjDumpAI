@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from './axiosConfig';
 
 const DatasetDetail = () => {
     const { datasetId } = useParams();
+    const location = useLocation();
     const navigate = useNavigate();
     const [photos, setPhotos] = useState([]);
     const [error, setError] = useState(null);
     const [image, setImage] = useState(null);
     const [label, setLabel] = useState('');
+    const datasetName = location.state?.name || '';
 
     useEffect(() => {
         if (!localStorage.getItem('token') || !localStorage.getItem('username')) {
@@ -16,12 +18,22 @@ const DatasetDetail = () => {
         } else {
             axios.get(`/api/datasets/${datasetId}/photos/`)
                 .then(response => {
-                    setPhotos(response.data);
+					const photoPromises = response.data.map(photo =>
+                        axios.get(photo.image, { responseType: 'blob' }).then(imageResponse => ({
+                            ...photo,
+                            imageUrl: URL.createObjectURL(imageResponse.data),
+                        }))
+                    );
+					Promise.all(photoPromises)
+						.then(photosWithBlob => {
+							setPhotos(photosWithBlob);
+						})
+						.catch(error => {
+							setError("There was an error fetching the photos.");
+							console.error(error);
+						});
                 })
-                .catch(error => {
-                    setError("There was an error fetching the photos.");
-                    console.error(error);
-                });
+				
         }
     }, [datasetId, navigate]);
 
@@ -47,7 +59,11 @@ const DatasetDetail = () => {
                 },
             });
 
-            setPhotos([...photos, response.data]);
+            const newPhoto = {
+                ...response.data,
+                imageUrl: URL.createObjectURL(new Blob([response.data.image], { type: response.data.imageType })),
+            };
+            setPhotos([...photos, newPhoto]);
 
             setImage(null);
             setLabel('');
@@ -60,14 +76,14 @@ const DatasetDetail = () => {
     return (
         <center>
             <div>
-                <h2>Dataset {datasetId}</h2>
+                <h2>{datasetName || datasetId}</h2>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 <h3>Your Photos</h3>
                 {photos.length > 0 ? (
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
                         {photos.map(photo => (
                             <li key={photo.id} style={{ margin: '10px 0' }}>
-                                <img src={photo.image} alt={photo.label} width="100" />
+                                <img src={photo.imageUrl} alt={photo.label} width="100" />
                                 <p>{photo.label}</p>
                             </li>
                         ))}

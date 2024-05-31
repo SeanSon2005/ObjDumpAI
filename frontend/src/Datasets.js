@@ -50,7 +50,7 @@ const Datasets = () => {
                     <ul style={{ listStyleType: 'none', padding: 0 }}>
                         {datasets.map(dataset => (
                             <li key={dataset.id} style={{ margin: '10px 0' }}>
-                                <button onClick={() => navigate(`/datasets/${dataset.id}`)}>
+                                <button onClick={() => navigate(`/datasets/${dataset.id}`, {state: {name: dataset.name}})}>
                                     {dataset.name}
                                 </button>
                             </li>
