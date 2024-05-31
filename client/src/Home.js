@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import DisplayAnImage from './DisplayAnImage';
 import Spacer from './Spacer';
+import Animation from "./Animation";
 
 function Home() {
   const [selectedFile, setSelectedFile] = useState(null); 
@@ -53,9 +54,12 @@ function Home() {
       <Spacer size={26} />
 
       <h3><center>Example AI Generated Image Description: </center></h3>
-      <h4><center>{description}</center></h4> 
 
-      <Spacer size={56} />
+      <Spacer size={5} />
+
+      {Animation()}
+
+      <Spacer size={100} />
 
       <h1><center>Try it Yourself:</center></h1>
 
