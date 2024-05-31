@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import axios from './axiosConfig';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import './DatasetDetail.css';
 
 const DatasetDetail = () => {
     const { datasetId } = useParams();
@@ -10,6 +13,7 @@ const DatasetDetail = () => {
     const [error, setError] = useState(null);
     const [image, setImage] = useState(null);
     const [label, setLabel] = useState('');
+
     const datasetName = location.state?.name || '';
 
     useEffect(() => {
@@ -18,22 +22,21 @@ const DatasetDetail = () => {
         } else {
             axios.get(`/api/datasets/${datasetId}/photos/`)
                 .then(response => {
-					const photoPromises = response.data.map(photo =>
+                    const photoPromises = response.data.map(photo =>
                         axios.get(photo.image, { responseType: 'blob' }).then(imageResponse => ({
                             ...photo,
                             imageUrl: URL.createObjectURL(imageResponse.data),
                         }))
                     );
-					Promise.all(photoPromises)
-						.then(photosWithBlob => {
-							setPhotos(photosWithBlob);
-						})
-						.catch(error => {
-							setError("There was an error fetching the photos.");
-							console.error(error);
-						});
+                    Promise.all(photoPromises)
+                        .then(photosWithBlob => {
+                            setPhotos(photosWithBlob);
+                        })
+                        .catch(error => {
+                            setError("There was an error fetching the photos.");
+                            console.error(error);
+                        });
                 })
-				
         }
     }, [datasetId, navigate]);
 
@@ -48,6 +51,11 @@ const DatasetDetail = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+		if(label.length > 80) {
+			setError("Label name is too long.")
+			return;
+		}
+
         const formData = new FormData();
         formData.append('image', image);
         formData.append('label', label);
@@ -58,15 +66,14 @@ const DatasetDetail = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-
-            const newPhoto = {
+            const newPhoto = await axios.get(response.data.image, { responseType: 'blob' }).then(imageResponse => ({
                 ...response.data,
-                imageUrl: URL.createObjectURL(new Blob([response.data.image], { type: response.data.imageType })),
-            };
+                imageUrl: URL.createObjectURL(imageResponse.data),
+            }));
             setPhotos([...photos, newPhoto]);
-
             setImage(null);
             setLabel('');
+			setError(null);
         } catch (error) {
             setError("There was an error uploading the photo.");
             console.error(error);
@@ -78,16 +85,17 @@ const DatasetDetail = () => {
             <div>
                 <h2>{datasetName || datasetId}</h2>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <h3>Your Photos</h3>
                 {photos.length > 0 ? (
-                    <ul style={{ listStyleType: 'none', padding: 0 }}>
-                        {photos.map(photo => (
-                            <li key={photo.id} style={{ margin: '10px 0' }}>
-                                <img src={photo.imageUrl} alt={photo.label} width="100" />
-                                <p>{photo.label}</p>
-                            </li>
-                        ))}
-                    </ul>
+                    <div className="gallery-container">
+                        <Carousel showArrows={true} showThumbs={false} infiniteLoop={true}>
+                            {photos.map((photo, index) => (
+                                <div key={index} className="slider-item">
+                                    <img src={photo.imageUrl} alt={photo.label} />
+                                    <div className="image-label">{photo.label}</div>
+                                </div>
+                            ))}
+                        </Carousel>
+                    </div>
                 ) : (
                     <p>No photos available.</p>
                 )}

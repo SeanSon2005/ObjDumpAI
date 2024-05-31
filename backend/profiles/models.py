@@ -7,7 +7,7 @@ def user_directory_path(instance, filename):
 
 class Dataset(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=32)
 
     def __str__(self):
         return self.name
@@ -15,7 +15,7 @@ class Dataset(models.Model):
 class Photo(models.Model):
     dataset = models.ForeignKey(Dataset, related_name="photos", on_delete=models.CASCADE)
     image = models.ImageField(upload_to=user_directory_path, storage=ProtectedMediaStorage)
-    label = models.CharField(max_length=255, blank=True, default="")
+    label = models.CharField(max_length=80, blank=True, default="")
 
     def __str__(self):
         return f"{self.id}"

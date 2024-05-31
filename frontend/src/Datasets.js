@@ -29,7 +29,10 @@ const Datasets = () => {
 
     const handleDatasetSubmit = async (e) => {
         e.preventDefault();
-
+		if(datasetName.length > 32) {
+			setError("Dataset name is too long.");
+			return;
+		}
         try {
             const response = await axios.post('/api/datasets/', { name: datasetName });
             setDatasets([...datasets, response.data]);
