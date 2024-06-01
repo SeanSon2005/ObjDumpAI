@@ -6,36 +6,10 @@ from torch.utils.data import DataLoader
 from torchvision.utils import make_grid
 
 from .config import Config
-from .logger import Logger
+from .logger import MetricTracker, LiveWriter, get_logger
 
 
 class BaseTrainer:
-    """Custom base class for all trainers.
-
-    This class provides basic utilities for training a model, including setting
-    up the model architecture, initializing the optimizer and loss function, and
-    providing logging and visualization utilities. The class also supports
-    monitoring model performance and saving the best model.
-
-    Attributes:
-        config (Config): The configuration object.
-        model (torch.nn.Module): The model architecture.
-        optimizer (torch.optim.Optimizer): The optimizer.
-        criterion (torch.nn.Module | Callable): The loss function.
-        metric_fns (list[torch.nn.Module | Callable]): A list of metric functions.
-        n_epoch (int): The number of epochs to train the model.
-        start_epoch (int): The starting epoch number, used for resuming training.
-        early_stop (int): The number of epochs to wait before early stopping.
-        logger (Logger): The logger instance.
-        writer (TensorboardWriter): The visualization writer instance.
-        log_step (int): The frequency of logging training information.
-        save_period (int): The frequency of saving model checkpoints.
-        checkpoint_dir (Path): The directory to save model checkpoints.
-        monitor (str): The model performance monitoring mode.
-        mnt_mode (str): The monitoring mode (min or max).
-        mnt_best (float): The best monitored metric value.
-    """
-
     def __init__(
         self,
         config: Config,
@@ -56,7 +30,12 @@ class BaseTrainer:
         self.start_epoch = 1
 
         # setup logger and visualization writer instance
-        self.logger = Logger
+        self.logger = get_logger(
+            name="trainer", verbosity=0
+        )
+        self.writer = LiveWriter(
+            config.log_dir, self.logger, enabled=False
+        )
         self.log_step: int = cfg_trainer["log_step"]
         self.save_period: int = cfg_trainer["save_period"]
         self.checkpoint_dir = config.save_dir
@@ -164,36 +143,17 @@ class BaseTrainer:
             "monitor_best": self.mnt_best,
             "config": self.config,
         }
-        fname = str(self.checkpoint_dir / f"ep{epoch}.pt")
+        fname = str(self.checkpoint_dir / f"ep{epoch}.pth")
         torch.save(state, fname)
         self.logger.info("Checkpoint saved: %s ...", fname)
 
         if save_best:  # save as the best yet
-            best_fname = str(self.checkpoint_dir / "model_best.pt")
+            best_fname = str(self.checkpoint_dir / "model_best.pth")
             torch.save(state, best_fname)
             self.logger.info("Best checkpoint saved: %s ...", best_fname)
 
 
-class CustomTrainer(BaseTrainer):
-    """Custom trainer for any dataset, validation included.
-
-    Attributes:
-        config (Config): Configuration object.
-        device (torch.device): Device to run the model on.
-        model (torch.nn.Module): Model to be trained.
-        optimizer (torch.optim.Optimizer): Optimizer for training.
-        criterion (torch.nn.Module | Callable): Loss function.
-        metric_fns (list[Any]): List of metric functions.
-        train_data_loader (torch.utils.data.DataLoader): Training data loader.
-        valid_data_loader (torch.utils.data.DataLoader, optional): Validation data
-            loader. Defaults to None.
-        lr_scheduler (torch.optim.lr_scheduler.LRScheduler, optional):
-            Learning rate scheduler. Defaults to None.
-        n_batch (int): Number of training steps (batches) in an epoch.
-        train_metrics (MetricTracker): Training metric tracker.
-        valid_metrics (MetricTracker): Validation metric tracker.
-    """
-
+class YoloTrainer(BaseTrainer):
     def __init__(
         self,
         config: Config,
@@ -214,6 +174,12 @@ class CustomTrainer(BaseTrainer):
         # data loader and metric configuration
         self.train_loader = train_data_loader
         self.valid_loader = valid_data_loader
+        self.train_metrics = MetricTracker(
+            "loss", *[m.__name__ for m in metric_fns], writer=self.writer
+        )
+        self.valid_metrics = MetricTracker(
+            "loss", *[m.__name__ for m in metric_fns], writer=self.writer
+        )
         self.n_batch = len(self.train_loader)
 
     def _train_epoch(self, epoch: int) -> dict:
@@ -231,34 +197,21 @@ class CustomTrainer(BaseTrainer):
 
         for batch_idx, (images, labels) in enumerate(self.train_loader):
             # configure data and optimizer
-            images = images.to(self.device)
-            labels = labels.to(self.device)
-
+            batch = self._generate_batch(images, labels)
             self.optimizer.zero_grad()  # zero the gradients
 
             # forward and backward pass
-            out_images, out_labels = self.model(images, labels, mode="train")
-            loss = self.criterion(images, labels, out_images, out_labels)
+            preds = self.model(batch)
+            loss, loss_items = self.criterion(preds, batch)
             loss.backward()
             self.optimizer.step()
 
-            # get the index of the maximum value
-            label = labels.argmax(dim=1)  # from one-hot
-            out_label = out_labels.argmax(dim=1)  # from probability
-
             # update tracker
-            self.writer.set_step((epoch - 1) * self.n_batch + batch_idx)
-            self.train_metrics.update("loss", loss.item())
-            for metric in self.metric_fns:
-                self.train_metrics.update(metric.__name__, metric(label, out_label))
+            self.valid_metrics.update("loss", loss.item())
 
             # log training information
             if batch_idx % self.log_step == 0 or batch_idx == len(self.train_loader):
                 self.logger.debug(self._progress(epoch, batch_idx, loss.item()))
-                # add input images to the tensorboard
-                self.writer.add_image(
-                    "input", make_grid(images.cpu(), nrow=8, normalize=True)
-                )
 
         epoch_log = self.train_metrics.result()
 
@@ -289,28 +242,14 @@ class CustomTrainer(BaseTrainer):
         with torch.no_grad():
             for batch_idx, (images, labels) in enumerate(self.valid_loader):
                 # configure data and optimizer
-                images = images.to(self.device)
-                labels = labels.to(self.device)
+                batch = self._generate_batch(images, labels)
 
                 # # forward and backward pass
-                out_images, out_labels = self.model(images, labels, mode="eval")
-                loss = self.criterion(images, labels, out_images, out_labels)
-
-                # get the index of the maximum value
-                label = labels.argmax(dim=1)  # from one-hot
-                out_label = out_labels.argmax(dim=1)  # from probability
+                pred = self.model(batch)
+                loss, loss_items = self.criterion(pred, batch)
 
                 # update tracker
-                self.writer.set_step(
-                    (epoch - 1) * len(self.valid_loader) + batch_idx, "valid"
-                )
                 self.valid_metrics.update("loss", loss.item())
-                for metric in self.metric_fns:
-                    self.valid_metrics.update(metric.__name__, metric(label, out_label))
-
-        # add histogram of model parameters to the tensorboard
-        for name, param in self.model.named_parameters():
-            self.writer.add_histogram(name, param, bins="auto")
 
         return self.valid_metrics.result()
 
@@ -335,3 +274,20 @@ class CustomTrainer(BaseTrainer):
             100 * current / samples,
             loss_value,
         )
+
+    def _generate_batch(self, images, labels) -> dict:
+        """Put data into dict"""
+        sizes = torch.tensor([len(sublist) for sublist in labels])
+        batch_idx = torch.cat([torch.full((size,), idx, dtype=torch.int32) for idx, size in enumerate(sizes)]).to(self.device)
+
+        cls = torch.tensor(labels[:,:,0]).view(-1,1).to(self.device)
+        bboxes = torch.tensor(labels[:,:,1:]).view(-1,4).to(self.device)
+        images = torch.tensor(images / 255).to(self.device)
+
+        batch = {
+            "batch_idx" : batch_idx,
+            "img": images,
+            "cls": cls,
+            "bboxes": bboxes,
+        }
+        return batch

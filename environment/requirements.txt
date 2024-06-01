@@ -4,6 +4,7 @@ torchaudio --index-url https://download.pytorch.org/whl/torchaudio/
 autodistill
 autodistill-grounding-dino
 supervision
+roboflow
 ultralytics
 django
 flake8
