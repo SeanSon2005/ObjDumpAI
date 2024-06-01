@@ -1,4 +1,3 @@
-import './Login.css';
 import React, { useState } from 'react';
 import Login from './Login';
 import Spacer from './Spacer';
@@ -38,6 +37,8 @@ export default function Signup() {
 
     return (
         <div className="signup-wrapper">
+            <Spacer size={30} />
+
             {showRegisterForm && (
                 <>
                     <h1><center>Sign Up/Register</center></h1>
@@ -67,7 +68,7 @@ export default function Signup() {
                         <label>
                             <p><center>Password</center></p>
                             <input
-                                type="text"
+                                type="password"
                                 placeholder="Password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
@@ -77,7 +78,7 @@ export default function Signup() {
                         <label>
                             <p><center>Confirm Password</center></p>
                             <input
-                                type="text"
+                                type="password"
                                 placeholder="Confirm Password"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
