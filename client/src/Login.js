@@ -1,4 +1,3 @@
-import './Login.css';
 import React, { useState } from 'react';
 import Signup from './SignUp';
 import Spacer from './Spacer';
@@ -15,6 +14,8 @@ export default function Login() {
         
         {showLoginForm && (
             <>
+                <Spacer size={20} />
+
                 <h6><center>Welcome Back!</center></h6>
                 <Spacer size={1} />
 
@@ -24,7 +25,7 @@ export default function Login() {
                 <input type="text" placeholder="Username" required />
                 
                 <h2>Password</h2>
-                <input type="text" placeholder="Password" required />
+                <input type="password" placeholder="Password" required />
                 </label>
                 <Spacer size={50} />
 
