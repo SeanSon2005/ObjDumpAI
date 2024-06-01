@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import Login from './Login';
 import Home from './Home'; 
 import Database from './Database';
+import ModelGallery from './Models.js';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/" element={<Home />} />  
           <Route path="/database" element={<Database />} />  
           <Route path="/login" element={<Login />} />
+          <Route path="/models" element={<ModelGallery />} />
         </Routes>
       </Router>
     </div>
