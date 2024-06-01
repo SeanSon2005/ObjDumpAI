@@ -5,10 +5,13 @@ const Navbar = () => {
         <div className="links">
           <a href="/">Home</a>
 
-          <a href="/database" style={{ 
-          }}>Upload Database</a>
+          <a href="/models" style={{ 
+          }}>Models</a>
 
-          <a href="/login" class="button" style={{ 
+          <a href="/database" style={{ 
+          }}>Image Database</a>
+          
+          <a href="/login" style={{ 
             color: 'white', 
             backgroundColor: '#007FFF',
             borderRadius: '10px' 
