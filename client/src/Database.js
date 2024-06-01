@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Spacer from './Spacer';
+import MyGallery from './Gallery';
 
 var name = "[name goes here]";
 var uploader = "[username goes here]";
@@ -30,7 +31,7 @@ function Database() {
 
   return (
     <div className="content"> 
-          <h6> <center>Database</center></h6>
+          <h6> <center>Uploaded Image Database</center></h6>
           <Spacer size={30} />
 
     <div className="image-gallery">
@@ -52,6 +53,7 @@ function Database() {
       ))
       }
     </div>
+    {MyGallery()}
     </div>
   );
 }
