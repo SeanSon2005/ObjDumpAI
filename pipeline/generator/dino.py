@@ -1,21 +1,19 @@
 from autodistill_grounding_dino import GroundingDINO
 from autodistill.detection import CaptionOntology
-import os
-import cv2
-import supervision as sv
+from utils.logger import get_logger
 
-DATASET_NAME = "sample"
-
-base_model = GroundingDINO(ontology=CaptionOntology({"shipping container": "container"}))
-
-IMAGE_NAME = "valid/images/image.jpg"
-
-image = os.path.join(DATASET_NAME, IMAGE_NAME)
-
-predictions = base_model.predict(image)
-
-image = cv2.imread(image)
-
-annotator = sv.BoxAnnotator()
-
-annotated_image = annotator.annotate(scene=image, detections=predictions)
+class Generator:
+    def __init__(self, output_path="data/labels"):
+        self.model = GroundingDINO(
+            ontology=CaptionOntology({"shipping container": "container"})
+            )
+        self.output_path = output_path
+        self.logger = get_logger(
+            name="trainer", verbosity=2
+        )
+    def label(self, path: str):
+        try:
+            self.model.label(input_folder = path, 
+                             output_folder = self.output_path)
+        except:
+            self.logger.info("File not Found: ", path)

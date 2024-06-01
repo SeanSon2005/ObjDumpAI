@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any, Type
 
 from .tools import read_yaml
+from .logger import global_logger_setup
 
 
 class Config:
@@ -22,6 +23,10 @@ class Config:
         exist_ok = run_id == ""
         self.save_dir.mkdir(parents=True, exist_ok=exist_ok)
         self.log_dir.mkdir(parents=True, exist_ok=exist_ok)
+
+        # setup logging
+        global_logger_setup(self.config["logger"], self.log_dir)
+
 
     @classmethod
     def load_config(cls, cfg_fname: str) -> "Config":

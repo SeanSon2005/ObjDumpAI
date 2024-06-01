@@ -1,6 +1,7 @@
 from typing import Any, Callable
 
 import cv2
+import os
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -12,8 +13,22 @@ from torchvision import datasets, transforms
 
 class CustomDataset(Dataset):
     def __init__(self, data_dir, transform=None):
-        self.images = np.load(data_dir + "images.npy")
-        self.labels = np.load(data_dir + "labels.npy")
+        images_path = os.path.join(data_dir,"images")
+        images_list = os.listdir(images_path)
+        labels_path = os.path.join(data_dir,"labels")
+        labels_list = os.listdir(labels_path)
+        images_np = np.zeros((len(images_list),640,640,3), dtype=np.float32)
+        labels_np = []
+        for index, name in enumerate(zip(images_list,labels_list)):
+            image_name, label_name = name
+            image = cv2.imread(os.path.join(images_path, image_name))
+            label = np.loadtxt(os.path.join(labels_path, label_name),dtype=np.float32)
+            square_img = cv2.resize(image,(640,640))
+            images_np[index] = square_img
+            labels_np.append(label)
+            
+        self.images = images_np
+        self.labels = labels_np
         self.data_dir = data_dir
         self.image_transform = transform[0]
         self.label_transform = transform[1]
@@ -25,9 +40,12 @@ class CustomDataset(Dataset):
         if torch.is_tensor(idx):
             idx = idx.tolist()
 
-        image = np.float32(np.expand_dims(self.images[idx], axis=0))
-        label = self.label_transform(label)
-        image = self.image_transform(image)
+        image = np.float32(self.images[idx])
+        label = self.labels[idx]
+        if self.label_transform:
+            label = self.label_transform(label)
+        if self.image_transform:
+            image = self.image_transform(image)
         sample = (image, label)
 
         return sample
@@ -153,18 +171,12 @@ class CustomDataLoader(BaseDataLoader):
                 transforms.Lambda(self.random_color_shift),
             ]
         )
-        label_transform = transforms.Lambda(self.one_hot_encode)
+        label_transform = None
 
         self.dataset = CustomDataset(data_dir=data_dir, transform=(image_transform, label_transform))
         super().__init__(
             self.dataset, batch_size, shuffle, validation_split, num_workers
         )
-
-    def one_hot_encode(self, label: int, size: int = 10) -> torch.Tensor:
-        """Transforms the given label into a one-hot encoded tensor."""
-        one_hot = torch.zeros(size)
-        one_hot[label] = 1
-        return one_hot
 
     def random_color_shift(self, img: torch.Tensor) -> torch.Tensor:
         """Randomly shift the color of an images (different light filters)"""

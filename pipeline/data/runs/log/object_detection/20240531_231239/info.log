@@ -1,0 +1,69 @@
+2024-05-31 23:12:39 - program - INFO - Using seed    : 24
+2024-05-31 23:12:39 - program - INFO - Using device  : cuda
+2024-05-31 23:12:39 - program - INFO - Data loaded   : CustomDataLoader
+2024-05-31 23:12:39 - program - INFO - Model set up  : Yolov8n
+2024-05-31 23:12:39 - program - INFO - Using loss    : YoloLoss
+2024-05-31 23:12:39 - program - INFO - Using metrics : ['bbox_iou']
+2024-05-31 23:12:41 - trainer - INFO -    epoch          : 1
+2024-05-31 23:12:41 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:41 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:41 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:41 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:41 - trainer - INFO -    epoch          : 2
+2024-05-31 23:12:41 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:41 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:41 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:41 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:42 - trainer - INFO -    epoch          : 3
+2024-05-31 23:12:42 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:42 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:42 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:42 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:42 - trainer - INFO -    epoch          : 4
+2024-05-31 23:12:42 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:42 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:42 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:42 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:43 - trainer - INFO -    epoch          : 5
+2024-05-31 23:12:43 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:43 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:43 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:43 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:43 - trainer - INFO - Checkpoint saved: data/runs/models/object_detection/20240531_231239/ep5.pth ...
+2024-05-31 23:12:44 - trainer - INFO -    epoch          : 6
+2024-05-31 23:12:44 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:44 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:44 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:44 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:44 - trainer - INFO -    epoch          : 7
+2024-05-31 23:12:44 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:44 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:44 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:44 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:45 - trainer - INFO -    epoch          : 8
+2024-05-31 23:12:45 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:45 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:45 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:45 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:45 - trainer - INFO -    epoch          : 9
+2024-05-31 23:12:45 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:45 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:45 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:45 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:46 - trainer - INFO -    epoch          : 10
+2024-05-31 23:12:46 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:46 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:46 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:46 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:46 - trainer - INFO - Checkpoint saved: data/runs/models/object_detection/20240531_231239/ep10.pth ...
+2024-05-31 23:12:46 - trainer - INFO -    epoch          : 11
+2024-05-31 23:12:46 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:46 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:46 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:46 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:47 - trainer - INFO -    epoch          : 12
+2024-05-31 23:12:47 - trainer - INFO -    loss           : 0
+2024-05-31 23:12:47 - trainer - INFO -    bbox_iou       : 0
+2024-05-31 23:12:47 - trainer - INFO -    val_loss       : 0
+2024-05-31 23:12:47 - trainer - INFO -    val_bbox_iou   : 0
+2024-05-31 23:12:47 - trainer - INFO - Validation performance didn't improve for 10 epochs. Training stops.
