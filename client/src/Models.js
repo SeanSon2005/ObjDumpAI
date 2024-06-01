@@ -11,25 +11,32 @@ function ModelCard({ model }) {
   return (
     <div className="model-card">
       <h3>{model.name}</h3>
+      <h5>{model.user}</h5>
       <p>{model.description}</p>
       <Spacer size={30} />
-      <button class='button' onClick={handleLikeClick}>
+      <button class='button2' onClick={handleLikeClick}>
         Like ({likes})
       </button>
-      <Spacer size={30} />
+      {"         "}
+      <button class='button2' >
+        <center>Download</center> 
+      </button>
+      <Spacer size={90} />
     </div>
   );
 }
 
-function App() {
+function ModelGallery() {
   const models = [
     {
-      name: 'Object Detector Pro',
-      description: 'Accurately detects and classifies objects in images.',
+      name: 'Model: Object Detector Pro',
+      user: 'User: ExampleUser1',
+      description: 'Description: Accurately detects and classifies objects in images.',
     },
     {
-      name: 'Scene Analyzer Plus',
-      description: 'Analyzes images to understand scenes and context.',
+      name: 'Model: Scene Analyzer Plus',
+      user: 'User: ExampleUser2',
+      description: 'Description: Analyzes images to understand scenes and context.',
     },
     // Add more models as needed
   ];
@@ -38,7 +45,7 @@ function App() {
      <center>
     <div className="app">
     <Spacer size={30} />
-      <h1>AI Image Detection Models</h1>
+      <h6>AI Image Detection Models</h6>
       <Spacer size={30} />
       <div className="model-grid">
         {models.map((model, index) => (
@@ -50,4 +57,4 @@ function App() {
   );
 }
 
-export default App;
+export default ModelGallery;
