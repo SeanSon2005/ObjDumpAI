@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Signup from './SignUp';
 import Spacer from './Spacer';
+import myImage from './GeminiImage.jpeg'; // Adjust the path if needed
 
 export default function Login() {
     const [showLoginForm, setShowLoginForm] = useState(true);
@@ -43,7 +44,12 @@ export default function Login() {
             </>
         )}
         {!showLoginForm && <Signup />}
-        
+
+        <Spacer size={120} />
+
+        <div>
+            <center><img src={myImage} class="image" /> </center>
+        </div>
     </div>
 
     );
