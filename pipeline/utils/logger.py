@@ -15,7 +15,7 @@ LOG_LEVELS = {
 }
 
 
-class TensorboardWriter:
+class LiveWriter:
     """Handle visualization of training and validation statistics in Tensorboard.
 
     Attributes:
@@ -156,7 +156,7 @@ class MetricTracker:
         _data (pd.DataFrame): DataFrame for tracking metrics.
     """
 
-    def __init__(self, *keys: str, writer: TensorboardWriter = None):
+    def __init__(self, *keys: str, writer: LiveWriter = None):
         """Initialize instance for tracking metrics for a given set of keys.
 
         Args:
@@ -214,19 +214,7 @@ def global_logger_setup(log_cfg: dict, log_dir: str | Path) -> None:
     logging.config.dictConfig(log_cfg)
 
 
-def get_logger(name: str, verbosity: int = 2) -> logging.Logger:
-    """Instantiate logger with the specified name and verbosity level.
-
-    Args:
-        name (str): The name of the logger.
-        verbosity (int, optional): The verbosity level of the logger. Defaults to 2.
-
-    Returns:
-        logging.Logger: The logger with the specified name and verbosity level.
-
-    Raises:
-        AssertionError: If the verbosity level is not within the valid range (0-3).
-    """
+def get_logger(name: str, verbosity: int = 0) -> logging.Logger:
     assert (
         verbosity in LOG_LEVELS
     ), f"Verbosity option {verbosity} is out of range (0-3)"

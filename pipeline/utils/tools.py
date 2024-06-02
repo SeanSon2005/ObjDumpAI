@@ -1,7 +1,5 @@
 from pathlib import Path
-
 import yaml
-
 
 def read_yaml(fname: str | Path) -> dict:
     """Reads a YAML file and returns the data as dictionary."""

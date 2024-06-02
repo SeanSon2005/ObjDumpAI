@@ -3,33 +3,17 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Type
 
-from .logger import global_logger_setup
 from .tools import read_yaml
+from .logger import global_logger_setup
 
 
 class Config:
-    """Main class object to handle configuration and initialize logging.
-
-    Attributes:
-        _config (dict): The configuration dictionary loaded in from_args function.
-        _save_dir (Path): The directory for saving models.
-        _log_dir (Path): The directory for saving logs.
-    """
-
-    def __init__(self, config: dict, run_id: str = None):
-        """Initialize the Config object.
-
-        Args:
-            config (dict): The configuration dictionary loaded in from_args function.
-            run_id (str, optional): The run id for the experiment. If not
-                provided, the current timestamp is used. Defaults to None.
-        """
+    def __init__(self, config: dict):
         self._config = config
 
         # set experiment name and run id
         exp_name = config["main"]["name"]
-        if not run_id:  # use timestamp as default
-            run_id = datetime.now().strftime(r"%Y%m%d_%H%M%S")
+        run_id = datetime.now().strftime(r"%Y%m%d_%H%M%S")
 
         # set and create directory for saving log and model
         save_dir = Path(self.config["trainer"]["save_dir"])
@@ -43,49 +27,13 @@ class Config:
         # setup logging
         global_logger_setup(self.config["logger"], self.log_dir)
 
+
     @classmethod
-    def from_args(cls, args: argparse.Namespace) -> "Config":
-        """Initialize Config from cli arguments. Used in train and test.
-
-        Args:
-            args (argparse.Namespace): The command line arguments.
-
-        Returns:
-            Config: An instance of Config initialized with the values from the
-                config file.
-
-        Raises:
-            AssertionError: If the config file does not exist.
-        """
-        args = args.parse_args()
-        cfg_fname = Path(args.config)
-        assert cfg_fname.exists(), f"Config file not found at {cfg_fname}"
-
+    def load_config(cls, cfg_fname: str) -> "Config":
         config = read_yaml(cfg_fname)
-        return cls(config, args.run_id)
+        return cls(config)
 
     def init_obj(self, cfg_name: str, module: Type[Any], *args, **kwargs) -> Any:
-        """Initialize an object from a module using the configuration.
-
-        This method finds a function handle with the name given as 'type' in the
-        configuration file, and returns the instance initialized with
-        corresponding arguments given.
-
-        `function = config.init_obj('name', module, a, b=1)`
-        is equivalent to
-        `function = module."cfg['name']['type']"(a, b=1)`
-
-        Args:
-            cfg_name (str): The name of the configuration to use.
-            module (Type[Any]): The module to initialize the object from.
-
-        Returns:
-            Any: The initialized object.
-
-        Raises:
-            AssertionError: Keyword arguments should not changed the specified
-                configuration file.
-        """
         config = self.config[cfg_name]
         module_name = config["type"]
         module_args = dict(config["args"])
