@@ -7,7 +7,7 @@ data_loader:
   type: 'CustomDataLoader'
   args: # see utils/data_loader.py
     data_dir: 'data/'
-    batch_size: 4
+    batch_size: 1
     shuffle: True
     validation_split: 0.1
     num_workers: 8
