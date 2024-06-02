@@ -9,18 +9,38 @@ from utils.config import Config
 from utils.trainer import YoloTrainer
 from utils.logger import get_logger
 from generator.dino import Generator
+from generator.tagger import Tag_Generator
 
 class Pipeline:
     def __init__(self):
         self.generator = Generator()
+        self.tag_generator = Tag_Generator()
         self.logger = get_logger(
             name="program", verbosity=0
         )
 
     def generate_labels(self, queries: list[str]):
+        '''
+        Generate labels for images using GroundingDINO
+        '''
         self.generator.label(queries)
 
-    def train(self, path_to_config = "data/config.yaml"):
+    def generate_tags(self, input_images: list = None, return_list: bool = True):
+        '''
+        Generates tags describing a given list of images (defaults to search in init input folder)
+        Optional: input_images
+        return list: True for returning a string list of tags; False for stored in output folder
+        '''
+        if return_list:
+            return self.tag_generator.tag(input_images, return_list)
+        else:
+            self.tag_generator.tag(input_images, return_list)
+
+    def train(self, path_to_config):
+        '''
+        Train Model
+        path_to_config specifies path the the training config yaml file
+        '''
         cfg = Config.load_config(path_to_config)
         # set seed
         seed = cfg["main"]["seed"]
@@ -73,4 +93,5 @@ class Pipeline:
 if __name__ == "__main__":
     test_pipeline = Pipeline()
     test_pipeline.generate_labels(queries=["car","traffic cone"])
-    test_pipeline.train()
+    test_pipeline.train(path_to_config="data/training_configs/config_default.yaml")
+    print(test_pipeline.generate_tags())
