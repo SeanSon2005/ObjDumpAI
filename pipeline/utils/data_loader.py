@@ -41,14 +41,14 @@ class CustomDataset(Dataset):
             idx = idx.tolist()
 
         image = np.float32(self.images[idx])
-        label = self.labels[idx]
+        label = np.float32(self.labels[idx])
+
         if self.label_transform:
             label = self.label_transform(label)
         if self.image_transform:
             image = self.image_transform(image)
-        sample = (image, label)
 
-        return sample
+        return (image, label)
 
 class BaseDataLoader(DataLoader):
     """Custom base class for all data loaders. Inherits from PyTorch DataLoader.

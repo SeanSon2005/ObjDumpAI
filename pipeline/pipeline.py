@@ -17,10 +17,10 @@ class Pipeline:
             name="program", verbosity=0
         )
 
-    def generate_labels(self, path):
-        self.generator.label(path)
+    def generate_labels(self, queries: list[str]):
+        self.generator.label(queries)
 
-    def train(self, path_to_config = "config.yaml"):
+    def train(self, path_to_config = "data/config.yaml"):
         cfg = Config.load_config(path_to_config)
         # set seed
         seed = cfg["main"]["seed"]
@@ -72,5 +72,5 @@ class Pipeline:
 
 if __name__ == "__main__":
     test_pipeline = Pipeline()
-    #test_pipeline.generate_labels("data/images")
+    test_pipeline.generate_labels(queries=["car","traffic cone"])
     test_pipeline.train()
