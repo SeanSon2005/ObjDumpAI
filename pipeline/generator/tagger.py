@@ -35,7 +35,7 @@ class ImageDataset:
     
 
 class Tag_Generator:
-    def __init__(self, input_path: str = "data/images", output_path: str = "data/labels"):
+    def __init__(self, input_path: str = "data/images", output_path: str = "data"):
         self.input_path = input_path
         self.output_path = output_path
         self.processor = BlipProcessor.from_pretrained(

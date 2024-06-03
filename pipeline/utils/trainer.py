@@ -34,7 +34,7 @@ class BaseTrainer:
             name="trainer", verbosity=0
         )
         self.writer = LiveWriter(
-            config.log_dir, self.logger, enabled=False
+            "data/live_data", self.logger
         )
         self.log_step: int = cfg_trainer["log_step"]
         self.save_period: int = cfg_trainer["save_period"]
@@ -192,7 +192,11 @@ class YoloTrainer(BaseTrainer):
             dict: A dictionary containing logged information for this epoch.
                 Valid log is included if a validation data loader is provided.
         """
-        self.model.train()  # set the model to training mode
+        # Write current Epoch
+        self.writer.update({"Epoch":epoch, "Total Batches":len(self.train_loader)})
+
+        # set the model to training mode
+        self.model.train() 
         self.train_metrics.reset()
 
         for batch_idx, (images, labels) in enumerate(self.train_loader):
@@ -212,6 +216,9 @@ class YoloTrainer(BaseTrainer):
             # log training information
             if batch_idx % self.log_step == 0 or batch_idx == len(self.train_loader):
                 self.logger.debug(self._progress(epoch, batch_idx, loss.item()))
+            
+            # Write
+            self.writer.update({"Training Loss":loss.item(), "Current Batch":batch_idx+1})
 
         epoch_log = self.train_metrics.result()
 
@@ -236,6 +243,7 @@ class YoloTrainer(BaseTrainer):
         Returns:
             dict: A dictionary containing logged information for this epoch.
         """
+        self.writer.update({"Total Batches":len(self.valid_loader)})
         self.model.eval()  # set the model to evaluation mode
         self.valid_metrics.reset()
 
@@ -250,6 +258,10 @@ class YoloTrainer(BaseTrainer):
 
                 # update tracker
                 self.valid_metrics.update("loss", loss.item())
+
+                # Write
+                self.writer.update({"Validation Loss":loss.item(),"Current Batch":batch_idx+1})
+                
 
         return self.valid_metrics.result()
 
@@ -291,3 +303,4 @@ class YoloTrainer(BaseTrainer):
             "bboxes": bboxes,
         }
         return batch
+    

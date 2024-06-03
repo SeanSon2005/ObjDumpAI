@@ -94,4 +94,4 @@ if __name__ == "__main__":
     test_pipeline = Pipeline()
     test_pipeline.generate_labels(queries=["car","traffic cone"])
     test_pipeline.train(path_to_config="data/training_configs/config_default.yaml")
-    print(test_pipeline.generate_tags())
+    #print(test_pipeline.generate_tags())
