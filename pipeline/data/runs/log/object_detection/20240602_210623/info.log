@@ -1,6 +1,0 @@
-2024-06-02 21:06:23 - program - INFO - Using seed    : 24
-2024-06-02 21:06:23 - program - INFO - Using device  : cuda
-2024-06-02 21:06:23 - program - INFO - Data loaded   : CustomDataLoader
-2024-06-02 21:06:23 - program - INFO - Model set up  : Yolov8n
-2024-06-02 21:06:23 - program - INFO - Using loss    : YoloLoss
-2024-06-02 21:06:23 - program - INFO - Using metrics : ['bbox_iou']
