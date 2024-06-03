@@ -7,7 +7,7 @@ const Profile = () => {
 
 	useEffect(() => {
 		if (!localStorage.getItem('token') || !localStorage.getItem('username')) {
-			navigate('/login');
+			navigate('/');
 		}
 	}, [navigate]);
 
@@ -18,12 +18,12 @@ const Profile = () => {
     return (
         <center>
             <div>
-                <h2>Profile</h2>
                 {username ? (
-                    <p>Welcome, {username}!</p>
+                    <h2>Welcome, {username}!</h2>
                 ) : (
-                    <p>Welcome!</p>
+                    <h2>Welcome!</h2>
                 )}
+				<br/>
                 <button onClick={handleGoToDatasets}>Manage Datasets</button>
             </div>
         </center>

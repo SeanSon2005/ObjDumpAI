@@ -18,7 +18,7 @@ const DatasetDetail = () => {
 
     useEffect(() => {
         if (!localStorage.getItem('token') || !localStorage.getItem('username')) {
-            navigate('/login');
+            navigate('/');
         } else {
             axios.get(`/api/datasets/${datasetId}/photos/`)
                 .then(response => {

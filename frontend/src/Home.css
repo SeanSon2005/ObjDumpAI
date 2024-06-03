@@ -1,0 +1,125 @@
+div#login-register {
+	grid-area: main;
+	display: block;
+	background-color: #1b1b1b;
+	outline: 3px solid #BBBBBB;
+	margin: auto;
+	height: 60%;
+	width: 40%;
+	max-width: 500px;
+	left: 50%;
+}
+
+div#login, div#register {
+	height: 0;
+	visibility: hidden;
+	box-shadow: none;
+}
+
+div#login.selected, div#register.selected {
+	height: 100%;
+	visibility: visible;
+}
+
+div.menu {
+	grid-area:header;
+}
+
+table {
+	width: 100%;
+	height: auto;
+	margin: auto;
+	border-collapse: collapse;
+}
+
+table#menu {
+	height: auto;
+	margin: auto;
+	padding: 0;
+	text-align: center;
+	background-color: #555555;
+}
+
+table#menu tr {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background-color: #555555;
+}
+
+table#menu td,table#menu th {
+	width: 50%;
+	height: 100%;
+	padding: 20px 0 20px 0;
+	margin: 0;
+	font-size: 110%;
+	text-align: center;
+	border-width: 0;
+	background-color: #333333;
+}
+
+table#menu td:hover,table#menu th:hover {
+	background-color: black;
+    color: white;
+}
+
+table#menu td#login-btn,table#menu th#login-btn {
+	box-shadow: 0 -3px 0 0 #BBBBBB inset,-1.5px 0 0 0 #BBBBBB inset;
+}
+
+table#menu td#login-btn.selected,table#menu th#login-btn.selected {
+	box-shadow: -1.5px 0 0 0 #BBBBBB inset;
+}
+
+table#menu td#register-btn,table#menu th#register-btn {
+	box-shadow: 0 -3px 0 0 #BBBBBB inset,1.5px 0 0 0 #BBBBBB inset;
+}
+
+table#menu td#register-btn.selected,table#menu th#register-btn.selected {
+	box-shadow: 1.5px 0 0 0 #BBBBBB inset;
+}
+
+table#menu td.selected,table#menu th.selected {
+	background-color: #1b1b1b;
+}
+
+table#menu td#border,table#menu th#border{
+	margin: 0;
+	width: 0;
+	padding: 0;
+	box-shadow: none;
+}
+
+table.nav {
+	text-align: center;
+}
+
+table.nav td,table.nav th {
+	width: 50%;
+	font-size: 110%;
+	text-align: center;
+	line-height: 100%;
+	border-width: 0;
+	background-color: black;
+}
+
+table.nav td.selected,table.nav th.selected {
+	background-color: #222222;
+}
+
+button.login-register-button {
+	width: 90%;
+	padding: 20px;
+	background-color: #444444;
+	border: 0.5px solid transparent;
+	border-radius: 8px;
+	font-size: 100%;
+	color: white;
+    transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+button.login-register-button:hover {
+	background-color: black;
+    color: white;
+	border-color: grey;
+}

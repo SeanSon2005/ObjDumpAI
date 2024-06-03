@@ -32,5 +32,5 @@ class DatasetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dataset
-        fields = ["id", "user", "name", "photos"]
+        fields = ["id", "user", "name", "photos", "description", "created_at"]
         read_only_fields = ["user"]

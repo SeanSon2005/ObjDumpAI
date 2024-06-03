@@ -15,7 +15,7 @@ const Logout = () => {
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
-        navigate('/login');
+        navigate('/');
     };
 
     const handleConfirm = () => {
@@ -45,7 +45,7 @@ const Logout = () => {
             ) : (
                 <>
                     <p>You are not logged in.</p>
-                    <button onClick={() => navigate('/login')}>Login</button>
+                    <button onClick={() => navigate('/')}>Login</button>
                 </>
             )}
         </div>

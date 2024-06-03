@@ -1,0 +1,135 @@
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	overflow: hidden;
+	background-color: #222222;
+	color: #BBBBBB;
+	font-family: arial, sans-serif;
+}
+
+div {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	font-size: 180%;
+}
+
+h2 {
+	font-size: 170%;
+}
+
+h3 {
+	font-size: 160%;
+}
+
+h1,h2,h3 {
+	display: inline-block;
+	padding: 10px;
+	margin: 20px 0;
+	border: 2px solid #444444;
+	border-radius: 8px;
+	background-color: #1b1b1b;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+form {
+	padding: 10px;
+	margin: 0;
+}
+
+input {
+	display: block;
+	margin: 10px auto;
+	border: none;
+	outline: none;
+	padding: 10px;
+	font-size: 110%;
+	color: white;
+	background-color: #444444;
+	width: 90%;
+}
+
+button {
+	border: none;
+	padding: 10px;
+	outline: none;
+	background-color: #444444;
+	color: #bbbbbb;
+	border: 0.5px solid transparent;
+	border-radius: 8px;
+    transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+	cursor: pointer;
+	font-size: 120%;
+}
+
+button:hover {
+    color: white;
+	border-color: grey;
+	background-color: black;
+}
+
+p {
+	padding: 10px;
+	padding-top: 0;
+	word-break: break-word;
+	font-size: 150%;
+}
+
+a {
+	padding: 5px;
+	margin: 5px;
+	text-decoration: none;
+	display: block;
+	color: #BBBBBB;
+	background-color: #444444;
+	text-align: center;
+}
+
+a:hover {
+	background-color: black;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+	margin-bottom: 5rem;
+    background-color: #1b1b1b;
+    border-bottom: 1px solid #ddd;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+	padding: 0 4rem 0 0;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 0 40% 0 0;
+    padding: 0;
+}
+
+.nav-links li {
+    margin: 0;
+}
+
+.nav-links a {
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+	border: 0.5px solid transparent;
+	border-radius: 4px;
+    box-sizing: border-box;
+    transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+}
+
+.nav-links a:hover {
+    color: white;
+	border-color: grey;
+}
