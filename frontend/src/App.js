@@ -7,6 +7,7 @@ import Datasets from './Datasets';
 import DatasetDetail from './DatasetDetail';
 import DatasetCreate from './DatasetCreate';
 import DatasetDelete from './DatasetDelete';
+import DatasetUpload from './DatasetUpload';
 import './global.css';
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
 					<Route path="/datasets/:datasetId" element={<DatasetDetail/>} />
 					<Route path="/create" element={<DatasetCreate/>} />
 					<Route path="/delete/:datasetId" element={<DatasetDelete/>} />
+					<Route path="/upload/:datasetId" element={<DatasetUpload/>} />
 					<Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </div>
