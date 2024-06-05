@@ -1,0 +1,26 @@
+.photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    justify-items: center;
+}
+
+.photo {
+    width: 100%;
+    max-width: 400px; 
+    border: 2px solid black;
+    border-radius: 5px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.5);
+}
+
+.photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.photo-label {
+    padding: 5px;
+    text-align: center;
+    background-color: #f8f8f8;
+}
