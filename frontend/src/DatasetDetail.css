@@ -1,97 +1,125 @@
-.gallery-container {
+.table-container {
+    max-height: 500px;
+	max-width: 1200px;
+    overflow-y: auto;
     width: 80%;
-    max-width: 800px;
     margin: 0 auto;
-    position: relative;
-    box-sizing: border-box;
-    padding-bottom: 50px;
-    overflow: visible;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #202020;
 }
 
-.slider-item {
-    position: relative;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.slider-item img {
+.detail-table {
     width: 100%;
-    height: 300px;
-    object-fit: contain;
+    border-collapse: collapse;
+	table-layout: fixed;
 }
 
-.image-label {
-    font-size: 14px;
+.detail-table thead {
+    position: sticky;
+    top: 0;
+    background-color: #f1f1f1;
+    z-index: 1;
+}
+
+.detail-table th, .detail-table td {
+    border: 2px solid #444444;
+    padding: 8px;
     text-align: center;
-    color: black;
-    background-color: white;
-    border: 1px solid black;
-    padding: 5px;
-    width: 100%;
-    margin-top: 5px;
+	overflow-wrap: break-word;
 }
 
-.carousel .control-arrow {
-    width: 30px;
-    height: 30px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
+.detail-table th {
+    background-color: black;
+    color: white;
+}
+
+.edit-button {
+	color: white;
+	margin-right: 8px;
+}
+
+.upload-button {
+    background-color: darkgreen;
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+	margin-right: 8px;
+}
+
+.text-hl {
+    color: white;
+	font-size: 110%;
+}
+
+.modal {
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: center;
-    position: absolute;
+    position: fixed;
     z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
-.carousel.carousel-slider .control-arrow:hover {
-    background: black;
-
+.modal-content {
+    background-color: #1b1b1b;
+    padding: 40px;
+    border: 2px solid white;
+    width: 300px;
+    text-align: center;
+	position: relative;
 }
 
-.carousel.carousel-slider .control-arrow{
-    background: black;
+.modal-image {
+    width: 100%;
+    height: auto;
 }
 
-.carousel .control-prev.control-arrow {
-    left: -50px;
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
 }
 
-.carousel .control-next.control-arrow {
-    right: -50px;
-}
-
-.carousel.carousel-slider {
-    overflow: visible !important;
-}
-
-.carousel-status {
-	color: black;
-}
-
-.carousel .control-dots {
-    position: absolute;
-    bottom: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: center;
-    z-index: 1;
-}
-
-.carousel .control-dots .dot {
-    background-color: white;
-    border: 1px solid black;
-    width: 12px;
-    height: 12px;
-    margin: 0 5px;
-    opacity: 1;
+.close:hover,
+.close:focus {
+    color: darkred;
+    text-decoration: none;
     cursor: pointer;
 }
 
-.carousel .control-dots .dot.selected {
+.detail-table th:nth-child(1), .detail-table td:nth-child(1) {
+    width: 10%;
+}
+
+.detail-table th:nth-child(2), .detail-table td:nth-child(2) {
+    width: 20%;
+}
+
+.detail-table th:nth-child(3), .detail-table td:nth-child(3) {
+    width: 40%;
+}
+
+.detail-table th:nth-child(4), .detail-table td:nth-child(4) {
+    width: 20%;
+}
+
+.image-link {
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #000058;
+}
+
+.image-link:hover {
+    color: white;
     background-color: black;
 }

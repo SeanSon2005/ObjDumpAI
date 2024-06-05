@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserCreate, PhotoList, DatasetDetail, DatasetList, TrainInitView, TrainStatusView, TaskListView
+from .views import UserCreate, PhotoList, DatasetDetail, DatasetList, TrainInitView, TrainStatusView, TaskListView, PhotoLabelUpdateView, PhotoDeleteView
 from rest_framework.authtoken.views import ObtainAuthToken
 
 urlpatterns = [
@@ -12,4 +12,6 @@ urlpatterns = [
     path("datasets/<int:dataset_id>/tasks/status/", TrainStatusView.as_view(), name="train-status"),
     path("datasets/<int:dataset_id>/tasks/status/<str:task_id>/", TrainStatusView.as_view(), name="train-status-by-id"),
     path("datasets/<int:dataset_id>/tasks/list/", TaskListView.as_view(), name="task-list"),
+    path("photos/<int:photo_id>/", PhotoLabelUpdateView.as_view(), name="photo-label-update"),
+    path("photos/<int:photo_id>/delete/", PhotoDeleteView.as_view(), name="photo-delete"),
 ]

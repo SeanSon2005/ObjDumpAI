@@ -1,6 +1,6 @@
 from rest_framework import generics
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, PhotoSerializer, DatasetSerializer
+from .serializers import UserSerializer, PhotoSerializer, DatasetSerializer, PhotoLabelUpdateSerializer
 from .models import Photo, Dataset, Task
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -41,6 +41,27 @@ class PhotoList(generics.ListCreateAPIView):
         dataset_id = self.kwargs["dataset_id"]
         dataset = Dataset.objects.get(id=dataset_id, user=self.request.user)
         serializer.save(dataset=dataset)
+
+class PhotoLabelUpdateView(generics.RetrieveUpdateAPIView):
+    serializer_class = PhotoLabelUpdateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Photo.objects.filter(dataset__user=self.request.user)
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        return queryset.get(id=self.kwargs["photo_id"])
+
+class PhotoDeleteView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Photo.objects.filter(dataset__user=self.request.user)
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        return queryset.get(id=self.kwargs["photo_id"])
 
 class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()

@@ -14,10 +14,15 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 class PhotoSerializer(serializers.ModelSerializer):
+    filename = serializers.SerializerMethodField()
+
     class Meta:
         model = Photo
-        fields = ["id", "dataset", "image", "label"]
-        read_only_fields = ["dataset"]
+        fields = ["id", "dataset", "image", "label", "filename"]
+        read_only_fields = ["id", "dataset"]
+
+    def get_filename(self, obj):
+        return os.path.basename(obj.image.name)
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -33,4 +38,9 @@ class DatasetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dataset
         fields = ["id", "user", "name", "photos", "description", "created_at"]
-        read_only_fields = ["user"]
+        read_only_fields = ["id", "user", "created_at"]
+
+class PhotoLabelUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Photo
+        fields = ["label"]

@@ -87,6 +87,7 @@ const DatasetUpload = () => {
     return (
         <center>
             <div className="grid" id="dataset-upload">
+                <span className="close" onClick={() => { navigate(`/datasets/${datasetId}`, {state: {name: datasetName}}) }}>&times;</span>
                 <h2>Upload Data</h2>
 				<p>{`Dataset: ${datasetName}`}</p>
                 <p style={{ 'fontSize': '100%' }}>Upload individual image files or a zip file containing multiple images at the top level.</p>

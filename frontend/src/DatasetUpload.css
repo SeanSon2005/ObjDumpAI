@@ -1,20 +1,45 @@
 div#dataset-upload {
-	grid-area: main;
-	display: block;
-	background-color: #1b1b1b;
-	outline: 3px solid #BBBBBB;
-	margin: auto;
-	height: 60%;
-	width: 40%;
-	max-width: 500px;
-	left: 50%;
+    grid-area: main;
+    display: block;
+    background-color: #1b1b1b;
+    outline: 3px solid #BBBBBB;
+    margin: auto;
+    height: 60%;
+    width: 40%;
+    max-width: 500px;
+    position: relative;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+}
+
+.close:hover,
+.close:focus {
+    color: darkred;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 table {
-	width: 100%;
-	height: auto;
-	margin: auto;
-	border-collapse: collapse;
+    width: 100%;
+    height: auto;
+    margin: auto;
+    border-collapse: collapse;
 }
 
 .message-container {

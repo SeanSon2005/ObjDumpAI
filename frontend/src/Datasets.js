@@ -7,6 +7,11 @@ const Datasets = () => {
     const navigate = useNavigate();
     const [datasets, setDatasets] = useState([]);
     const [error, setError] = useState(null);
+    const [datasetName, setDatasetName] = useState('');
+    const [datasetDesc, setDatasetDesc] = useState('');
+    const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [selectedDataset, setSelectedDataset] = useState(null);
 
     useEffect(() => {
         if (!localStorage.getItem('token') || !localStorage.getItem('username')) {
@@ -23,15 +28,74 @@ const Datasets = () => {
         }
     }, [navigate]);
 
+    const handleDatasetSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
+        if (!datasetName) {
+            setError("Dataset name is required.");
+            return;
+        }
+        if (datasetName.length > 32) {
+            setError("Dataset name is too long.");
+            return;
+        }
+        try {
+            const response = await axios.post('/api/datasets/', { name: datasetName, description: datasetDesc });
+            if (response.status === 201) {
+                setDatasets([...datasets, response.data]);
+                setShowModal(false);
+                setDatasetName('');
+                setDatasetDesc('');
+            } else {
+                setError(`Unexpected status code: ${response.status}`);
+            }
+        } catch (error) {
+            if (error.response) {
+                setError(`Error: ${error.response.data.detail || 'There was an error creating the dataset.'}`);
+            } else if (error.request) {
+                setError('No response received from the server.');
+            } else {
+                setError('Error: Unable to create the dataset.');
+            }
+            console.error(error);
+        }
+    };
+
+    const handleDeleteClick = (dataset) => {
+        setSelectedDataset(dataset);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        try {
+            const response = await axios.delete(`/api/datasets/${selectedDataset.id}/detail`);
+            if (response.status === 204) {
+                setDatasets(datasets.filter(dataset => dataset.id !== selectedDataset.id));
+                setShowDeleteModal(false);
+                setSelectedDataset(null);
+            } else {
+                setError('There was an error deleting the dataset.');
+            }
+        } catch (error) {
+            setError('There was an error deleting the dataset.');
+            console.error(error);
+        }
+    };
+
+    const handleCloseDeleteModal = () => {
+        setShowDeleteModal(false);
+        setSelectedDataset(null);
+    };
+
     return (
         <center>
             <div>
                 <h2>Your Datasets</h2>
-				<br/>
-				<button onClick={() => navigate('/create')} className="new-dataset-button">
+                <br />
+                <button onClick={() => setShowModal(true)} className="new-dataset-button">
                     New Dataset
                 </button>
-				<br/>
+                <br />
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 {datasets.length > 0 ? (
                     <div className="table-container">
@@ -42,7 +106,7 @@ const Datasets = () => {
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th>Date Added</th>
-                                    <th>Action</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -56,9 +120,9 @@ const Datasets = () => {
                                             <button onClick={() => navigate(`/datasets/${dataset.id}`, { state: { name: dataset.name } })} className="view-button">
                                                 Manage
                                             </button>
-											<button onClick={() => navigate(`/delete/${dataset.id}`, { state: { name: dataset.name } })} className="delete-button">
-												Delete
-											</button>
+                                            <button onClick={() => handleDeleteClick(dataset)} className="delete-button">
+                                                Delete
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
@@ -67,6 +131,52 @@ const Datasets = () => {
                     </div>
                 ) : (
                     <p>No datasets available.</p>
+                )}
+
+				{showModal && (
+                    <div className="modal">
+                        <div className="modal-content">
+                            <span className="close" onClick={() => {setShowModal(false)}}>&times;</span>
+
+                            <h2>New Dataset</h2>
+							<form onSubmit={handleDatasetSubmit}>
+							<label>
+								<input 
+									type="text" 
+									placeholder="Name"
+									value={datasetName} 
+									onChange={(e) => setDatasetName(e.target.value)} 
+								/>
+							</label>
+							<label>
+								<input
+									type="text"
+									placeholder="Description"
+									value={datasetDesc}
+									onChange={(e) => setDatasetDesc(e.target.value)} 
+								/>
+							</label>
+							<br/>
+                            <button type="submit" style={{ color: "white" }}>Create</button>
+							</form>
+                        </div>
+                    </div>
+                )}
+
+                {showDeleteModal && (
+                    <div className="modal">
+                        <div className="modal-content">
+                            <span className="close" onClick={handleCloseDeleteModal}>&times;</span>
+                            <h2>Confirm Delete</h2>
+                            <p>Are you sure you want to delete dataset: {selectedDataset?.name}?</p>
+                            <button onClick={handleConfirmDelete} className="delete-button" style={{ color: "white", "margin-right": "10px" }}>
+                                Yes
+                            </button>
+                            <button onClick={handleCloseDeleteModal} style={{ color: "white" }}>
+                                No
+                            </button>
+                        </div>
+                    </div>
                 )}
             </div>
         </center>
