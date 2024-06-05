@@ -40,6 +40,23 @@ class DatasetSerializer(serializers.ModelSerializer):
         fields = ["id", "user", "name", "photos", "description", "created_at", "public"]
         read_only_fields = ["id", "user", "created_at"]
 
+class DatasetPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dataset
+        fields = ["id", "user", "name", "description", "created_at", "public"]
+        read_only_fields = fields
+
+class UserPublicInfoSerializer(serializers.ModelSerializer):
+    public_datasets = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ["id", "username", "public_datasets"]
+
+    def get_public_datasets(self, obj):
+        datasets = Dataset.objects.filter(user=obj, public=True)
+        return DatasetPublicSerializer(datasets, many=True).data
+
 class PhotoLabelUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
@@ -49,3 +66,5 @@ class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = ['task_id', 'status', 'created_at']
+
+

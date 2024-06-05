@@ -24,7 +24,7 @@ const Profile = () => {
                     <h2>Welcome!</h2>
                 )}
 				<br/>
-                <button onClick={handleGoToDatasets}>Manage Datasets</button>
+                <button onClick={handleGoToDatasets} style={{ color: "white" }}>Manage Datasets</button>
             </div>
         </center>
     );

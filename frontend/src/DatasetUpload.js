@@ -11,14 +11,28 @@ const DatasetUpload = () => {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [files, setFiles] = useState(null);
-
-    const datasetName = location.state?.name || '';
+	const [datasetName, setDatasetName] = useState(null);
 
     useEffect(() => {
         if (!localStorage.getItem('token') || !localStorage.getItem('username')) {
             navigate('/');
-        }
+        } else {
+			datasetMeta();
+		}
     }, [navigate]);
+
+	const datasetMeta = () => {
+		if(!datasetName) {
+			axios.get(`/api/datasets/${datasetId}/public/`)
+				.then(response => {
+					setDatasetName(response.data.name);
+				})
+				.catch(error => {
+					setError("There was an error fetching the dataset.");
+					console.error(error);
+				})
+		}
+	}
 
     const handleFileChange = (e) => {
         setFiles(e.target.files);

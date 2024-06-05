@@ -8,6 +8,7 @@ import DatasetDetail from './DatasetDetail';
 import DatasetUpload from './DatasetUpload';
 import DatasetSearch from './DatasetSearch';
 import DatasetReadonly from './DatasetReadonly';
+import PublicProfile from './PublicProfile';
 import './global.css';
 
 const App = () => {
@@ -33,6 +34,7 @@ const App = () => {
 					<Route path="/readonly/:datasetId" element={<DatasetReadonly/>} />
 					<Route path="/browse" element={<DatasetSearch/>} />
 					<Route path="/upload/:datasetId" element={<DatasetUpload/>} />
+					<Route path="/user/:userId" element={<PublicProfile/>} />
 					<Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </div>

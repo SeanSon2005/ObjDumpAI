@@ -84,7 +84,7 @@ const DatasetSearch = () => {
 											<button onClick={() => navigate(`/readonly/${dataset.id}`, { state: { name: dataset.name } })} className="view-button">
                                                 View
                                             </button>
-                                            <button onClick={() => navigate(`/`)} className="owner-button">
+                                            <button onClick={() => navigate(`/user/${dataset.user}`)} className="owner-button">
                                                 Owner
                                             </button>
 										</td>

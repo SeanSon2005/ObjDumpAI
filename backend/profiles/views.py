@@ -1,6 +1,6 @@
 from rest_framework import generics
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, PhotoSerializer, DatasetSerializer, PhotoLabelUpdateSerializer, TaskSerializer
+from .serializers import UserSerializer, PhotoSerializer, DatasetSerializer, PhotoLabelUpdateSerializer, TaskSerializer, UserPublicInfoSerializer, DatasetPublicSerializer
 from .models import Photo, Dataset, Task
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -38,6 +38,14 @@ class DatasetReadonlyView(generics.RetrieveAPIView):
         user = self.request.user
         return Dataset.objects.filter(Q(user=user)|Q(public=True))
 
+class DatasetPublicView(generics.RetrieveAPIView):
+    serializer_class = DatasetPublicSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        return Dataset.objects
+
+
 class TogglePublicityView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -49,6 +57,22 @@ class TogglePublicityView(APIView):
         dataset.public = not dataset.public
         dataset.save()
         return Response({"id": dataset.id, "name": dataset.name, "public": dataset.public}, status=status.HTTP_200_OK)
+
+class UserPublicInfoView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserPublicInfoSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'id'
+
+    def get(self, request, *args, **kwargs):
+        user_id = self.kwargs.get('id')
+        try:
+            user = User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return Response({"error": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = self.get_serializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class PhotoList(generics.ListCreateAPIView):
     serializer_class = PhotoSerializer
@@ -124,27 +148,21 @@ class UserCreate(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
 class DatasetSearchView(generics.ListAPIView):
-    serializer_class = DatasetSerializer
+    serializer_class = DatasetPublicSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         query = self.request.query_params.get("query", None)
         if query is None:
             return Dataset.objects.none()
-
-        # Split the query into individual words
         query_words = query.split()
-
-        # Construct the Q object for filtering datasets
         query_filter = Q()
         for word in query_words:
             query_filter |= Q(description__icontains=word) | Q(photos__label__icontains=word)
-
         datasets = Dataset.objects.filter(
             query_filter,
             Q(public=True),
         ).distinct()
-
         return datasets
 
     def list(self, request, *args, **kwargs):
@@ -164,7 +182,7 @@ class DatasetSearchView(generics.ListAPIView):
 
         response_data = []
         for relevance_score, dataset in results:
-            dataset_data = DatasetSerializer(dataset).data
+            dataset_data = DatasetPublicSerializer(dataset).data
             dataset_data["relevance_score"] = relevance_score
             response_data.append(dataset_data)
 

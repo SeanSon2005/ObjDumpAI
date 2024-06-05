@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserCreate, PhotoList, DatasetDetail, DatasetList, PhotoLabelUpdateView, PhotoDeleteView, DatasetReadonlyView, TogglePublicityView, DatasetSearchView, TaskStatusView, DatasetLabelerView
+from .views import UserCreate, PhotoList, DatasetDetail, DatasetList, PhotoLabelUpdateView, PhotoDeleteView, DatasetReadonlyView, TogglePublicityView, DatasetSearchView, TaskStatusView, DatasetLabelerView, UserPublicInfoView, DatasetPublicView
 from rest_framework.authtoken.views import ObtainAuthToken
 
 urlpatterns = [
@@ -14,5 +14,7 @@ urlpatterns = [
     path("datasets/<int:pk>/toggle-publicity/", TogglePublicityView.as_view(), name="dataset-toggle-publicity"),
     path("datasets/search/", DatasetSearchView.as_view(), name="dataset-search"),
     path("datasets/<int:dataset_id>/labeler/", DatasetLabelerView.as_view(), name="dataset-labeler"),
-    path("tasks/<str:task_id>/status/", TaskStatusView.as_view(), name="task_status"),
+    path("datasets/<int:pk>/public/", DatasetPublicView.as_view(), name="dataset-public"),
+    path("tasks/<str:task_id>/status/", TaskStatusView.as_view(), name="task-status"),
+    path("user/<int:id>/public-info/", UserPublicInfoView.as_view(), name="user-public-info")
 ]

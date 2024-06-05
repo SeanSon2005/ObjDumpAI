@@ -18,16 +18,29 @@ const DatasetDetail = () => {
     const [publicity, setPublicity] = useState(false);
     const [labelingStatus, setLabelingStatus] = useState('');
     const [taskId, setTaskId] = useState(null);
-
-    const datasetName = location.state?.name || '';
+	const [datasetName, setDatasetName] = useState(null);
 
     useEffect(() => {
         if (!localStorage.getItem('token') || !localStorage.getItem('username')) {
             navigate('/');
         } else {
-            fetchPhotos();
+			datasetMeta();
+			fetchPhotos();
         }
     }, [datasetId, navigate]);
+
+	const datasetMeta = () => {
+		if(!datasetName) {
+			axios.get(`/api/datasets/${datasetId}/public/`)
+				.then(response => {
+					setDatasetName(response.data.name);
+				})
+				.catch(error => {
+					setError("There was an error fetching the dataset.");
+					console.error(error);
+				})
+		}
+	}
 
     const fetchPhotos = () => {
         axios.get(`/api/datasets/${datasetId}/photos/`)
@@ -163,7 +176,7 @@ const DatasetDetail = () => {
     return (
         <center>
             <div>
-                <h2>{datasetName || datasetId}</h2>
+                <h2>{datasetName}</h2>
                 {labelingStatus && <p>{labelingStatus}</p>}
                 <br/>
                 <button onClick={handleLabelClick} className="label-button">

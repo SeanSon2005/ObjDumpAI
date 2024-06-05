@@ -12,16 +12,31 @@ const DatasetReadonly = () => {
     const [error, setError] = useState(null);
     const [showImageModal, setShowImageModal] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
-
-    const datasetName = location.state?.name || '';
+	const [datasetName, setDatasetName] = useState(null);
+	const [ownerId, setOwnerId] = useState(null);
 
     useEffect(() => {
         if (!localStorage.getItem('token') || !localStorage.getItem('username')) {
             navigate('/');
         } else {
+			datasetMeta();
             fetchPhotos();
         }
     }, [datasetId, navigate]);
+
+	const datasetMeta = () => {
+		if(!datasetName || !ownerId) {
+			axios.get(`/api/datasets/${datasetId}/public/`)
+				.then(response => {
+					setDatasetName(response.data.name);
+					setOwnerId(response.data.user);
+				})
+				.catch(error => {
+					setError("There was an error fetching the dataset.");
+					console.error(error);
+				})
+		}
+	}
 
     const fetchPhotos = () => {
         axios.get(`/api/datasets/${datasetId}/photos/`)
@@ -56,9 +71,9 @@ const DatasetReadonly = () => {
     return (
         <center>
             <div>
-                <h2>{datasetName || datasetId}</h2>
+                <h2>{datasetName}</h2>
                 <br/>
-                <button onClick={() => navigate('/')} className="owner-button">
+                <button onClick={() => navigate(`/user/${ownerId}`)} className="owner-button">
                     Owner
                 </button>
                 <br/><br/>
