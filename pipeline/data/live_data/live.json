@@ -1,5 +1,1 @@
-<<<<<<< HEAD
 {"Epoch": 12, "Current Batch": 1, "Total Batches": 1, "Training Loss": 6.593040943145752, "Validation Loss": 13.307672500610352, "Metrics": 13.307672500610352}
-=======
-{"Epoch": 13, "Current Batch": 1, "Total Batches": 1, "Training Loss": 8.431161880493164, "Validation Loss": 19.296838760375977, "Metrics": 19.296838760375977}
->>>>>>> e301381 (add celery and support for async cuda tasks, auto labeling frontend and search based on label similarity, rework task model)
