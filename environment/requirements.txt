@@ -3,6 +3,7 @@ torchvision --index-url https://download.pytorch.org/whl/torchvision/
 torchaudio --index-url https://download.pytorch.org/whl/torchaudio/
 autodistill
 autodistill-grounding-dino
+djangorestframework
 supervision
 roboflow
 ultralytics

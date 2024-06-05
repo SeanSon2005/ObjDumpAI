@@ -211,7 +211,7 @@ class YoloTrainer(BaseTrainer):
             self.optimizer.step()
 
             # update tracker
-            self.valid_metrics.update("loss", loss.item())
+            self.train_metrics.update("loss", loss.item())
 
             # log training information
             if batch_idx % self.log_step == 0 or batch_idx == len(self.train_loader):

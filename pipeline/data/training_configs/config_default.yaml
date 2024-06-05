@@ -43,6 +43,7 @@ trainer:
   monitor: 'min val_loss'  # '{min|max} {metrics}'
   early_stop: 10  # stop after x epoch not improving
 
+# DONT TOUCH
 logger:  # global logger config
   version: 1
   disable_existing_loggers: False

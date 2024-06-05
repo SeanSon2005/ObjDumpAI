@@ -13,23 +13,27 @@ from generator.tagger import Tag_Generator
 
 class Pipeline:
     def __init__(self):
-        self.generator = Generator()
-        self.tag_generator = Tag_Generator()
         self.logger = get_logger(
             name="program", verbosity=0
         )
+        self.generator = Generator(self.logger)
+        self.tag_generator = Tag_Generator()
 
-    def generate_labels(self, queries: list[str]):
+    def generate_labels(self, queries: list[str], force: bool):
         '''
         Generate labels for images using GroundingDINO
+        args:
+            querues: list of string describing which objects to label
+            force:   force relabing of existing labels
         '''
-        self.generator.label(queries)
+        self.generator.label(queries, force)
 
     def generate_tags(self, input_images: list = None, return_list: bool = True):
         '''
         Generates tags describing a given list of images (defaults to search in init input folder)
-        Optional: input_images
-        return list: True for returning a string list of tags; False for stored in output folder
+        args: 
+            input_images: provide image list or read from folder
+            return list: True for returning a string list of tags; False for stored in output folder
         '''
         if return_list:
             return self.tag_generator.tag(input_images, return_list)
@@ -39,7 +43,8 @@ class Pipeline:
     def train(self, path_to_config):
         '''
         Train Model
-        path_to_config specifies path the the training config yaml file
+        args:
+            path_to_config: specifies path the the training config yaml file
         '''
         cfg = Config.load_config(path_to_config)
         # set seed
@@ -92,6 +97,6 @@ class Pipeline:
 
 if __name__ == "__main__":
     test_pipeline = Pipeline()
-    test_pipeline.generate_labels(queries=["car","traffic cone"])
+    test_pipeline.generate_labels(queries=["car","traffic cone"], force=False)
     test_pipeline.train(path_to_config="data/training_configs/config_default.yaml")
     #print(test_pipeline.generate_tags())

@@ -1,19 +1,18 @@
 from autodistill_grounding_dino import GroundingDINO
 from autodistill.detection import CaptionOntology
-from utils.logger import get_logger
+import logging
 import os
 import cv2
 import supervision as sv
 import numpy as np
+import zlib
 
 class Generator:
-    def __init__(self, input_path="data/images", output_path="data/labels"):
+    def __init__(self, logger: logging.Logger, input_path="data/images", output_path="data/labels"):
         self.output_path = output_path
         self.input_path = input_path
         self.input_path2 = "data/annotated_images"
-        self.logger = get_logger(
-            name="trainer", verbosity=0
-        )
+        self.logger = logger
         self.conf_threshold = 0.3
         self.class_dict = {}
     def get_class_dict(self):
@@ -34,16 +33,27 @@ class Generator:
         height = y_max - y_min
         return f"{int(class_id)} {x_center:.5f} {y_center:.5f} {width:.5f} {height:.5f}"
     
-    def label(self, queries: list[str]):
+    def label(self, queries: list[str], force: bool = False):
         self.class_dict = {i: string for i, string in enumerate(queries)}
         model = GroundingDINO(
             ontology=CaptionOntology({string: string for string in queries})
             )
+        label_names = set(os.listdir(self.output_path))
+        label_count = 0
+
         for image_name in os.listdir(self.input_path):
             try:
                 image_path = os.path.join(self.input_path, image_name)
                 annotated_image_path = os.path.join(self.input_path2, image_name)
-                label_path = os.path.join(self.output_path, image_name[:-3]+"txt")
+                label_name = str(zlib.adler32(image_name.encode('utf-8'))) + ".txt"
+
+                # Skip Images that already have labels
+                if (not force and label_name in label_names):
+                    continue
+
+                label_count += 1
+
+                label_path = os.path.join(self.output_path, label_name)
                 image = cv2.imread(image_path)
 
                 predictions = model.predict(image)
@@ -65,3 +75,4 @@ class Generator:
                     f.close()
             except:
                 self.logger.info("File not Found: %s", image_path)
+        self.logger.info("Number of Generated Labels: %s", label_count)

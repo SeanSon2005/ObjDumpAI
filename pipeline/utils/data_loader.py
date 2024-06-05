@@ -3,6 +3,7 @@ from typing import Any, Callable
 import cv2
 import os
 import numpy as np
+import zlib
 import torch
 import torch.nn.functional as F
 import torchvision.transforms.functional as Ft
@@ -16,11 +17,10 @@ class CustomDataset(Dataset):
         images_path = os.path.join(data_dir,"images")
         images_list = os.listdir(images_path)
         labels_path = os.path.join(data_dir,"labels")
-        labels_list = os.listdir(labels_path)
         images_np = np.zeros((len(images_list),640,640,3), dtype=np.float32)
         labels_np = []
-        for index, name in enumerate(zip(images_list,labels_list)):
-            image_name, label_name = name
+        for index, image_name in enumerate(images_list):
+            label_name = str(zlib.adler32(image_name.encode('utf-8'))) + ".txt"
             image = cv2.imread(os.path.join(images_path, image_name))
             label = np.loadtxt(os.path.join(labels_path, label_name),dtype=np.float32)
             square_img = cv2.resize(image,(640,640))

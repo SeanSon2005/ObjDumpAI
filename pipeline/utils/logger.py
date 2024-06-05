@@ -48,9 +48,6 @@ class LiveWriter:
         with open(os.path.join(self.update_path,"live.json"), "w") as f: 
             json.dump(self.info, f)
 
-
-
-
 class MetricTracker:
     """Class for tracking metrics during model training and evaluation.
 
