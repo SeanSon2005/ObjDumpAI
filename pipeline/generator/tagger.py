@@ -7,15 +7,17 @@ import cv2
 from PIL import Image
 
 class ImageDataset:
-    """Simple Image Dataset"""
-
     def __init__(self, input):
+        self.images = []
+        self.image_paths = []
+        
         if isinstance(input, str):
-            self.images = []
             for image_name in os.listdir(input):
                 image_path = os.path.join(input, image_name)
                 image = cv2.imread(image_path)
-                self.images.append(image)
+                if image is not None:
+                    self.images.append(image)
+                    self.image_paths.append(image_path)
         else:
             self.images = input
 
@@ -27,40 +29,36 @@ class ImageDataset:
             idx = idx.tolist()
 
         sample = self.images[idx]
-        return sample
+        path = self.image_paths[idx]
+        return path, sample
 
     def __iter__(self):
-        data_iter = iter(self.images)
-        return data_iter
-    
+        for idx in range(len(self.images)):
+            yield self[idx]
 
 class Tag_Generator:
     def __init__(self, input_path: str = "data/images", output_path: str = "data"):
         self.input_path = input_path
         self.output_path = output_path
-        self.processor = BlipProcessor.from_pretrained(
-            "Salesforce/blip-image-captioning-base")
-        self.model = BlipForConditionalGeneration.from_pretrained(
-            "Salesforce/blip-image-captioning-base").to("cuda")
-    def tag(self, input_images = None, output: bool = True):
+        self.processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+        self.model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to("cuda")
+
+    def tag(self, input_images=None, output: bool = True):
         if input_images:
             image_dataset = ImageDataset(input_images)
         else:
             image_dataset = ImageDataset(self.input_path)
+        
         descriptions = []
-        for batch in image_dataset:
+        for img_path, batch in image_dataset:
             raw_image = Image.fromarray(batch).convert('RGB')
             inputs = self.processor(raw_image, return_tensors="pt").to("cuda")
             out = self.model.generate(**inputs)
-            descriptions.append(self.processor.decode(out[0], 
-                                                      skip_special_tokens=True))
+            description = self.processor.decode(out[0], skip_special_tokens=True)
+            base_name = os.path.basename(img_path)
+            descriptions.append((base_name, description))
+        
         if output:
             return descriptions
         else:
-            tag_path = os.path.join(self.output_path, 
-                                    "tags"+str(idx)+".txt")
-            with open(tag_path,'w') as f:
-                for idx, desc in enumerate(descriptions):
-                    f.write(desc)
-                f.close()
-                    
+            return []

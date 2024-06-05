@@ -5,8 +5,8 @@ import Logout from './Logout';
 import Profile from './Profile';
 import Datasets from './Datasets';
 import DatasetDetail from './DatasetDetail';
-import DatasetDelete from './DatasetDelete';
 import DatasetUpload from './DatasetUpload';
+import DatasetSearch from './DatasetSearch';
 import './global.css';
 
 const App = () => {
@@ -19,6 +19,7 @@ const App = () => {
 						<li><Link to="/">Home</Link></li>
                         <li><Link to="/profile">Profile</Link></li>
                         <li><Link to="/datasets">Datasets</Link></li>
+                        <li><Link to="/browse">Browse</Link></li>
                         <li><Link to="/logout">Logout</Link></li>
                     </ul>
                 </nav>
@@ -28,6 +29,7 @@ const App = () => {
                     <Route path="/profile" element={<Profile/>} />
                     <Route path="/datasets" element={<Datasets/>} />
 					<Route path="/datasets/:datasetId" element={<DatasetDetail/>} />
+					<Route path="/browse" element={<DatasetSearch/>} />
 					<Route path="/upload/:datasetId" element={<DatasetUpload/>} />
 					<Route path="*" element={<Navigate to="/" />} />
                 </Routes>

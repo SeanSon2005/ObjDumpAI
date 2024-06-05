@@ -1,14 +1,15 @@
 from rest_framework import generics
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, PhotoSerializer, DatasetSerializer, PhotoLabelUpdateSerializer
+from .serializers import UserSerializer, PhotoSerializer, DatasetSerializer, PhotoLabelUpdateSerializer, TaskSerializer
 from .models import Photo, Dataset, Task
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from .tasks import train_model
+from .tasks import train_model, label_dataset
+from django.db.models import Q
 from celery.result import AsyncResult
 import os
 
@@ -28,6 +29,26 @@ class DatasetDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Dataset.objects.filter(user=self.request.user)
+
+class DatasetReadonlyView(generics.RetrieveAPIView):
+    serializer_class = DatasetSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Dataset.objects.filter(Q(user=user) | Q(public=True))
+
+class TogglePublicityView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        try:
+            dataset = Dataset.objects.get(pk=pk, user=request.user)
+        except Dataset.DoesNotExist:
+            return Response({"error": "Dataset not found or does not belong to the user."}, status=status.HTTP_404_NOT_FOUND)
+        dataset.public = not dataset.public
+        dataset.save()
+        return Response({"id": dataset.id, "name": dataset.name, "public": dataset.public}, status=status.HTTP_200_OK)
 
 class PhotoList(generics.ListCreateAPIView):
     serializer_class = PhotoSerializer
@@ -68,68 +89,64 @@ class UserCreate(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
-class TrainInitView(APIView):
+class DatasetSearchView(generics.ListAPIView):
+    serializer_class = DatasetSerializer
     permission_classes = [IsAuthenticated]
 
-    def post(self, request):
+    def get_queryset(self):
+        query = self.request.query_params.get("query", None)
+        if query is None:
+            return Dataset.objects.none()
+        datasets = Dataset.objects.filter(
+            Q(description__icontains=query) | Q(photos__label__icontains=query),
+            user=self.request.user
+        ).distinct()
+
+        return datasets
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        query = request.query_params.get("query", "")
+
+        results = []
+        for dataset in queryset:
+            description_match_count = dataset.description.lower().count(query.lower())
+            photo_match_count = sum([photo.label.lower().count(query.lower()) for photo in dataset.photos.all()])
+            total_match_count = description_match_count + photo_match_count
+            results.append((total_match_count, dataset))
+
+        results.sort(key=lambda x: x[0], reverse=True)
+        datasets = [dataset for _, dataset in results]
+
+        response_data = []
+        for relevance_score, dataset in results:
+            dataset_data = DatasetSerializer(dataset).data
+            dataset_data['relevance_score'] = relevance_score
+            response_data.append(dataset_data)
+
+        return Response(response_data)
+
+class DatasetLabelerView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, dataset_id):
         user = request.user
-        dataset_id = self.kwargs["dataset_id"]
         try:
             dataset = Dataset.objects.get(id=dataset_id, user=user)
         except Dataset.DoesNotExist:
-            return Response({"error": "Dataset not found or does not belong to  the user."}, status=status.HTTP_404_NOT_FOUND)
-        
-        task = train_model.delay(user.id, dataset.id)
-        Task.objects.create(user=user, dataset=dataset, task_id=task.id, status="pending")
+            return Response({"error": "Dataset not found or does not belong to the user."}, status=status.HTTP_404_NOT_FOUND)
+        task = label_dataset.delay(user.id, dataset.id)
+        Task.objects.create(user=user, dataset=dataset, task_id=task.id, status="PENDING")
         return Response({"task_id": task.id}, status=status.HTTP_202_ACCEPTED)
 
-class TrainStatusView(APIView):
+class TaskStatusView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, dataset_id, task_id=None):
-        if task_id:
-            task_result = AsyncResult(task_id)
-        else:
-            try:
-                task_instance = Task.objects.filter(user=request.user, dataset_id=dataset_id).latest("created_at")
-                task_result = AsyncResult(task_instance.task_id)
-            except Task.DoesNotExist:
-                return Response({"error": "No tasks found for the given dataset"}, status=status.HTTP_404_NOT_FOUND)
-        if task_result.state == "pending":
-            response = {
-                "state": task_result.state,
-                "current": task_result.info.get("current", 0),
-                "total": task_result.info.get("total", 1),
-                "status": "In progress...",
-            }
-        elif task_result.state == "success":
-            response = {
-                "state": task_result.state,
-                "result": task_result.result,
-            }
-        else:
-            response = {
-                "state": task_result.state,
-                "status": str(task_result.info),
-            }
-        return Response(response)
-
-class TaskListView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request, dataset_id):
-        user = request.user
+    def get(self, request, task_id):
         try:
-            dataset = Dataset.objects.get(id=dataset_id, user=user)
-        except Dataset.DoesNotExist:
-            return Response({"error": "Dataset not found or does not belong to the user"}, status=status.HTTP_404_NOT_FOUND)
-        tasks = Task.objects.filter(user=user, dataset=dataset)
-        tasks_data = [
-            {
-                "task_id": task.task_id,
-                "status": task.status,
-                "created_at": task.created_at,
-            }
-            for task in tasks
-        ]
-        return Response(tasks_data, status=status.HTTP_200_OK)
+            task = Task.objects.get(task_id=task_id, user=request.user)
+        except Task.DoesNotExist:
+            return Response({"error": "Task not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = TaskSerializer(task)
+        return Response(serializer.data, status=status.HTTP_200_OK)

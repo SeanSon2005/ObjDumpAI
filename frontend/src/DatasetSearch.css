@@ -1,0 +1,55 @@
+.grid {
+    display: grid;
+    gap: 10px;
+}
+
+#dataset-search {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#dataset-search h2 {
+    margin-bottom: 20px;
+}
+
+#dataset-search form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#dataset-search input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+#dataset-search button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#dataset-search button:hover {
+    background-color: #0056b3;
+}
+
+#dataset-search ul {
+    list-style: none;
+    padding: 0;
+}
+
+#dataset-search li {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}

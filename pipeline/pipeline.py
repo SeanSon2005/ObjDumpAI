@@ -97,6 +97,12 @@ class Pipeline:
 
 if __name__ == "__main__":
     test_pipeline = Pipeline()
+<<<<<<< HEAD
     test_pipeline.generate_labels(queries=["car","traffic cone"], force=False)
     test_pipeline.train(path_to_config="data/training_configs/config_default.yaml")
     #print(test_pipeline.generate_tags())
+=======
+    #test_pipeline.generate_labels(queries=["car","traffic cone"])
+    #test_pipeline.train(path_to_config="data/training_configs/config_default.yaml")
+    test_pipeline.generate_tags("/home/enzo/src/hw/good/SAMforEmbeddedDevices/backend/protected_media/2/6")
+>>>>>>> e301381 (add celery and support for async cuda tasks, auto labeling frontend and search based on label similarity, rework task model)

@@ -15,6 +15,9 @@ const DatasetDetail = () => {
     const [showImageModal, setShowImageModal] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [publicity, setPublicity] = useState(false);
+    const [labelingStatus, setLabelingStatus] = useState('');
+    const [taskId, setTaskId] = useState(null);
 
     const datasetName = location.state?.name || '';
 
@@ -22,16 +25,66 @@ const DatasetDetail = () => {
         if (!localStorage.getItem('token') || !localStorage.getItem('username')) {
             navigate('/');
         } else {
-            axios.get(`/api/datasets/${datasetId}/photos/`)
-                .then(response => {
-                    setPhotos(response.data);
-                })
-                .catch(error => {
-                    setError("There was an error fetching the dataset.");
-                    console.error(error);
-                });
+            fetchPhotos();
         }
     }, [datasetId, navigate]);
+
+    const fetchPhotos = () => {
+        axios.get(`/api/datasets/${datasetId}/photos/`)
+            .then(response => {
+                setPhotos(response.data);
+                setPublicity(response.data.public);
+            })
+            .catch(error => {
+                setError("There was an error fetching the dataset.");
+                console.error(error);
+            });
+    };
+
+    const handleLabelClick = () => {
+        axios.post(`/api/datasets/${datasetId}/labeler/`)
+            .then(response => {
+                const taskId = response.data.task_id;
+                setTaskId(taskId);
+                setLabelingStatus('Labeling...');
+                checkTaskStatus(taskId);
+            })
+            .catch(error => {
+                setError("There was an error starting the labeling task.");
+                console.error(error);
+            });
+    };
+
+    const checkTaskStatus = (taskId) => {
+        const intervalId = setInterval(() => {
+            axios.get(`/api/tasks/${taskId}/status/`)
+                .then(response => {
+                    const status = response.data.status;
+                    if (status === 'SUCCESS') {
+                        setLabelingStatus('');
+                        clearInterval(intervalId);
+                        fetchPhotos();
+                        deleteTask(taskId);
+                    } else if (status === 'FAILURE') {
+                        setLabelingStatus('');
+                        setError('Labeling failed.');
+                        clearInterval(intervalId);
+                        deleteTask(taskId);
+                    }
+                })
+                .catch(error => {
+                    setError("There was an error checking the task status.");
+                    console.error(error);
+                });
+        }, 5000); // Check every 5 seconds
+    };
+
+    const deleteTask = (taskId) => {
+        axios.delete(`/api/tasks/${taskId}/delete/`)
+            .catch(error => {
+                console.error("There was an error deleting the task.", error);
+            });
+    };
 
     const handleEditClick = (photo) => {
         setSelectedPhoto(photo);
@@ -40,14 +93,19 @@ const DatasetDetail = () => {
     };
 
     const handleSaveLabel = (e) => {
-		e.preventDefault();
+        e.preventDefault();
+        if (newLabel.length > 80) {
+            setError("Label must be 80 characters or less.");
+            return;
+        }
         axios.put(`/api/photos/${selectedPhoto.id}/`, { label: newLabel })
             .then(response => {
-                setPhotos(photos.map(photo => 
+                setPhotos(photos.map(photo =>
                     photo.id === selectedPhoto.id ? { ...photo, label: newLabel } : photo
                 ));
                 setShowEditModal(false);
                 setSelectedPhoto(null);
+                setError(null);
             })
             .catch(error => {
                 setError("There was an error updating the label.");
@@ -106,14 +164,18 @@ const DatasetDetail = () => {
         <center>
             <div>
                 <h2>{datasetName || datasetId}</h2>
-				<br/>
-				<button onClick={() => navigate(`/upload/${datasetId}`, { state: { name: datasetName } })} className="upload-button">
+                {labelingStatus && <p>{labelingStatus}</p>}
+                <br/>
+                <button onClick={handleLabelClick} className="label-button">
+                    Label
+                </button>
+                <button onClick={() => navigate(`/upload/${datasetId}`, { state: { name: datasetName } })} className="upload-button">
                     Upload
                 </button>
-				<button onClick={() => navigate('/datasets')} style={{ color: "white" }}>
-					Back
-				</button>
-				<br/>
+                <button onClick={() => navigate('/datasets')} style={{ color: "white" }}>
+                    Back
+                </button>
+                <br/>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 {photos.length > 0 ? (
                     <div className="table-container">
@@ -138,9 +200,9 @@ const DatasetDetail = () => {
                                         <td><span className="text-hl">{photo.label}</span></td>
                                         <td>
                                             <button className="edit-button" onClick={() => handleEditClick(photo)}>
-												Label
-											</button>
-											<button onClick={() => handleDeleteClick(photo)} className="delete-button">
+                                                Label
+                                            </button>
+                                            <button onClick={() => handleDeleteClick(photo)} className="delete-button">
                                                 Delete
                                             </button>
                                         </td>
@@ -158,17 +220,17 @@ const DatasetDetail = () => {
                         <div className="modal-content">
                             <span className="close" onClick={handleCloseEditModal}>&times;</span>
                             <h2>Edit Label</h2>
-							<form onSubmit={handleSaveLabel}>
-							<label>
+                            <form onSubmit={handleSaveLabel}>
+                            <label>
                             <input 
                                 type="text" 
-								placeholder="Label"
+                                placeholder="Label"
                                 value={newLabel} 
                                 onChange={(e) => setNewLabel(e.target.value)} 
                             />
-							</label>
+                            </label>
                             <button type="submit" style={{ color: "white", "margin-top": "10px" }}>Save</button>
-							</form>
+                            </form>
                         </div>
                     </div>
                 )}

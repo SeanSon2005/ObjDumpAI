@@ -47,6 +47,14 @@
 	margin-right: 8px;
 }
 
+.label-button {
+    background-color: #b58b00;
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+	margin-right: 8px;
+}
+
 .text-hl {
     color: white;
 	font-size: 110%;

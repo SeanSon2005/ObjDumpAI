@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Photo, Dataset
+from .models import Photo, Dataset, Task
 import os
 
 class UserSerializer(serializers.ModelSerializer):
@@ -37,10 +37,15 @@ class DatasetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Dataset
-        fields = ["id", "user", "name", "photos", "description", "created_at"]
+        fields = ["id", "user", "name", "photos", "description", "created_at", "public"]
         read_only_fields = ["id", "user", "created_at"]
 
 class PhotoLabelUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
         fields = ["label"]
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ['task_id', 'status', 'created_at']

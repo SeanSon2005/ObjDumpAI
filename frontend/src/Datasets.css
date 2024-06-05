@@ -74,6 +74,10 @@
 }
 
 .datasets-table th:nth-child(5), .datasets-table td:nth-child(5) {
+    width: 15%;
+}
+
+.datasets-table th:nth-child(6), .datasets-table td:nth-child(5) {
     width: 20%;
 }
 
@@ -114,4 +118,9 @@
     color: darkred;
     text-decoration: none;
     cursor: pointer;
+}
+
+.vis-button {
+	color: white;
+	background-color: #000058;
 }
