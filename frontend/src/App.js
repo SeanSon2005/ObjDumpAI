@@ -7,6 +7,7 @@ import Datasets from './Datasets';
 import DatasetDetail from './DatasetDetail';
 import DatasetUpload from './DatasetUpload';
 import DatasetSearch from './DatasetSearch';
+import DatasetReadonly from './DatasetReadonly';
 import './global.css';
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
                     <Route path="/profile" element={<Profile/>} />
                     <Route path="/datasets" element={<Datasets/>} />
 					<Route path="/datasets/:datasetId" element={<DatasetDetail/>} />
+					<Route path="/readonly/:datasetId" element={<DatasetReadonly/>} />
 					<Route path="/browse" element={<DatasetSearch/>} />
 					<Route path="/upload/:datasetId" element={<DatasetUpload/>} />
 					<Route path="*" element={<Navigate to="/" />} />

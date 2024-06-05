@@ -49,10 +49,12 @@ def label_dataset(self, user_id, dataset_id):
         img_path = os.path.join(settings.PROTECTED_MEDIA_ROOT, f"{user_id}/{dataset_id}/")
         tags = pipeline_instance.generate_tags(img_path)
         
-        for image_name, image_tags in tags:
+        for image_name, image_tag in tags:
             try:
                 photo = Photo.objects.get(dataset_id=dataset_id, image__icontains=image_name)
-                photo.label = image_tags
+                if len(image_tag) > 80:
+                    image_tag = image_tag[:80]
+                photo.label = image_tag
                 photo.save()
             except Photo.DoesNotExist:
                 logger.warning(f"Photo with name {image_name} not found in dataset {dataset_id}.")

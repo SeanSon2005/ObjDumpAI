@@ -200,7 +200,7 @@ const DatasetDetail = () => {
                                         <td><span className="text-hl">{photo.label}</span></td>
                                         <td>
                                             <button className="edit-button" onClick={() => handleEditClick(photo)}>
-                                                Label
+                                                Edit
                                             </button>
                                             <button onClick={() => handleDeleteClick(photo)} className="delete-button">
                                                 Delete

@@ -3,43 +3,83 @@
     gap: 10px;
 }
 
-#dataset-search {
-    max-width: 500px;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-#dataset-search h2 {
-    margin-bottom: 20px;
-}
-
-#dataset-search form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#dataset-search input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 16px;
-}
-
-#dataset-search button {
-    padding: 10px;
-    background-color: #007bff;
+.search-button {
+    background-color: #000058;
     color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
 }
 
-#dataset-search button:hover {
-    background-color: #0056b3;
+.search-bar {
+    min-width: 30%;
+    max-width: 500px;
+    border-radius: 5px;
+    font-size: 140%;
+}
+
+.table-container {
+    max-height: 500px;
+	max-width: 1200px;
+    overflow-y: auto;
+    width: 80%;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #202020;
+}
+
+.owner-button {
+    background-color: #b58b00;
+    color: white;
+}
+
+.view-button {
+    background-color: darkgreen;
+    color: white;
+	margin-right: 8px;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.results-table thead {
+    position: sticky;
+    top: 0;
+    background-color: #f1f1f1;
+    z-index: 1;
+}
+
+.results-table th, .results-table td {
+    border: 2px solid #444444;
+    padding: 8px;
+    text-align: center;
+    overflow-wrap: break-word;
+}
+
+.results-table th {
+    background-color: black;
+    color: white;
+}
+
+.results-table th:nth-child(1), .results-table td:nth-child(1) {
+    width: 5%;
+}
+
+.results-table th:nth-child(2), .results-table td:nth-child(2) {
+    width: 15%;
+}
+
+.results-table th:nth-child(3), .results-table td:nth-child(3) {
+    width: 35%;
+}
+
+.results-table th:nth-child(4), .results-table td:nth-child(4) {
+    width: 15%;
+}
+
+.results-table th:nth-child(5), .results-table td:nth-child(5) {
+    width: 20%;
 }
 
 #dataset-search ul {
@@ -52,4 +92,14 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+}
+
+#dataset-search .results-container {
+    max-height: 450px;
+    overflow-y: auto;
+}
+
+.text-hl {
+    color: white;
+	font-size: 110%;
 }

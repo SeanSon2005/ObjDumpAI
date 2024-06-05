@@ -36,7 +36,7 @@ class DatasetReadonlyView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Dataset.objects.filter(Q(user=user) | Q(public=True))
+        return Dataset.objects.filter(Q(user=user)|Q(public=True))
 
 class TogglePublicityView(APIView):
     permission_classes = [IsAuthenticated]
@@ -52,16 +52,50 @@ class TogglePublicityView(APIView):
 
 class PhotoList(generics.ListCreateAPIView):
     serializer_class = PhotoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         dataset_id = self.kwargs["dataset_id"]
-        return Photo.objects.filter(dataset__id=dataset_id, dataset__user=self.request.user)
+        try:
+            dataset = Dataset.objects.get(id=dataset_id)
+        except Dataset.DoesNotExist:
+            return Response({"error": "Dataset does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+        if dataset.user != self.request.user and not dataset.public:
+            return Response({"error": "You do not have permission to access this dataset."}, status=status.HTTP_403_FORBIDDEN)
+
+        return Photo.objects.filter(dataset__id=dataset_id)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        if isinstance(queryset, Response):
+            return queryset
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def perform_create(self, serializer):
         dataset_id = self.kwargs["dataset_id"]
-        dataset = Dataset.objects.get(id=dataset_id, user=self.request.user)
+        try:
+            dataset = Dataset.objects.get(id=dataset_id)
+        except Dataset.DoesNotExist:
+            return Response({"error": "Dataset does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+        if not self.request.user.is_authenticated and not dataset.public:
+            return Response({"error": "You do not have permission to add photos to this dataset."}, status=status.HTTP_403_FORBIDDEN)
+
+        if self.request.user.is_authenticated and dataset.user != self.request.user:
+            return Response({"error": "You do not have permission to add photos to this dataset."}, status=status.HTTP_403_FORBIDDEN)
+
         serializer.save(dataset=dataset)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        response = self.perform_create(serializer)
+        if isinstance(response, Response):
+            return response
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class PhotoLabelUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = PhotoLabelUpdateSerializer
@@ -97,9 +131,18 @@ class DatasetSearchView(generics.ListAPIView):
         query = self.request.query_params.get("query", None)
         if query is None:
             return Dataset.objects.none()
+
+        # Split the query into individual words
+        query_words = query.split()
+
+        # Construct the Q object for filtering datasets
+        query_filter = Q()
+        for word in query_words:
+            query_filter |= Q(description__icontains=word) | Q(photos__label__icontains=word)
+
         datasets = Dataset.objects.filter(
-            Q(description__icontains=query) | Q(photos__label__icontains=query),
-            user=self.request.user
+            query_filter,
+            Q(public=True),
         ).distinct()
 
         return datasets
@@ -107,11 +150,12 @@ class DatasetSearchView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         query = request.query_params.get("query", "")
+        query_words = query.split()
 
         results = []
         for dataset in queryset:
-            description_match_count = dataset.description.lower().count(query.lower())
-            photo_match_count = sum([photo.label.lower().count(query.lower()) for photo in dataset.photos.all()])
+            description_match_count = sum(dataset.description.lower().count(word.lower()) for word in query_words)
+            photo_match_count = sum(photo.label.lower().count(word.lower()) for word in query_words for photo in dataset.photos.all())
             total_match_count = description_match_count + photo_match_count
             results.append((total_match_count, dataset))
 
@@ -121,7 +165,7 @@ class DatasetSearchView(generics.ListAPIView):
         response_data = []
         for relevance_score, dataset in results:
             dataset_data = DatasetSerializer(dataset).data
-            dataset_data['relevance_score'] = relevance_score
+            dataset_data["relevance_score"] = relevance_score
             response_data.append(dataset_data)
 
         return Response(response_data)
