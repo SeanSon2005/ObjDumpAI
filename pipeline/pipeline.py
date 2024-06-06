@@ -96,6 +96,8 @@ class Pipeline:
         trainer.train()
 
 if __name__ == "__main__":
-    test_pipeline = Pipeline("/home/enzo/src/hw/good/SAMforEmbeddedDevices/backend/protected_media/training/1/18/31/")
-    test_pipeline.generate_labels(queries=["car"], force=True)
+    test_pipeline = Pipeline("/home/dorm-ubuntu/Documents/SAMforEmbeddedDevices/pipeline/data")
+    #test_pipeline = Pipeline("/home/enzo/src/hw/good/SAMforEmbeddedDevices/backend/protected_media/training/1/18/31/")
+    test_pipeline.generate_labels(queries=["car"], force=False)
+    test_pipeline.train("/home/dorm-ubuntu/Documents/SAMforEmbeddedDevices/pipeline/data/training_configs/config_default.yaml")
     #test_pipeline.train(path_to_config="/home/enzo/src/hw/good/SAMforEmbeddedDevices/backend/protected_media/training/1/18/31/config.yaml")

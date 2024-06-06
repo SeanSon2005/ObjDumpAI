@@ -290,12 +290,15 @@ class YoloTrainer(BaseTrainer):
 
     def _generate_batch(self, images, labels) -> dict:
         """Put data into dict"""
-        sizes = torch.tensor([len(sublist) for sublist in labels])
-        batch_idx = torch.cat([torch.full((size,), idx, dtype=torch.int32) for idx, size in enumerate(sizes)]).to(self.device)
-
-        print(labels.shape)
-        cls = torch.tensor(labels[:,:,0]).view(-1,1).to(self.device)
-        bboxes = torch.tensor(labels[:,:,1:]).view(-1,4).to(self.device)
+        if labels.shape[1] == 0:
+            batch_idx = torch.zeros(1).to(self.device)
+            cls = torch.tensor([-1]).to(self.device)
+            bboxes = torch.zeros(1,4).to(self.device)
+        else:
+            sizes = torch.tensor([len(sublist) for sublist in labels])
+            batch_idx = torch.cat([torch.full((size,), idx, dtype=torch.int32) for idx, size in enumerate(sizes)]).to(self.device)
+            cls = torch.tensor(labels[:,:,0]).view(-1,1).to(self.device)
+            bboxes = torch.tensor(labels[:,:,1:]).view(-1,4).to(self.device)
         images = torch.tensor(images / 255).to(self.device)
 
         batch = {
