@@ -7,6 +7,13 @@
     /><br>
 ObjDumpAI is a fullstack web application that brings the computer vision community together with accessible object detection model training and AI powered data labeling.
 
+## Table of Contents
+
+- [__Features__](#features)
+- [__Technologies__](#technologies)
+- [__Setup__](#setup)
+- [__Authors__](#authors)
+
 ## Features
 
 - __Image Datasets:__ Users can create datasets by uploading their own images of any size and common type
@@ -29,12 +36,22 @@ ObjDumpAI is a fullstack web application that brings the computer vision communi
 
 ## Setup
 
+In order to run a local instance of ObjdumpAI, first clone or download a copy of this repository. Follow the instructions below to initialize a local instance of each part of the application.
+
 To setup the frontend, from the root of the app, run:
 
 ```bash
 cd frontend
 npm install
 ```
+
+which should download a set of ```node_modules``` for the backend server.
+Main frontend dependencies:
+
+- React.js
+- react-router-dom - simulates paths for different pages
+
+
 To setup the backend, from the root of the app, run:
 
 ```bash
@@ -57,7 +74,7 @@ cd ../frontend
 npm start
 ```
 
-## Contributing
+## Authors
 
 Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
