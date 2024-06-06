@@ -4,7 +4,7 @@
     height="300"
     margin-left="auto"
     margin-right="auto"
-    />
+    /><br>
 ObjDumpAI is a fullstack web application that brings the computer vision community together with accessible object detection model training and AI powered data labeling.
 
 ## Features
