@@ -1,4 +1,65 @@
-div#login-register {
+.image {
+	width: auto;
+	height: auto;
+	max-width: 90%;
+	max-height: 50vh;
+	display: block;
+	margin: 0 auto; 
+	}
+	
+	.image-pair {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	}
+	
+	.animation-container {
+	margin-right: 181.5px;
+	}
+	
+	.image-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 20px;
+	}
+	
+	.image-section {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 0 20px;
+	}
+	
+	.image-header {
+	text-align: center;
+	margin-bottom: 10px;
+	}
+	
+	.image2 {
+	max-width: 100%;
+	max-height: 0vh;
+	}
+	
+	.image-boxes {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 10px;
+	}
+	
+	.image-box {
+	width: 40%;
+	height: 5px;
+	background-color: black;
+	margin: 0 10px;
+	}
+	
+	.image2 {
+	max-width: 45vw; 
+	max-height: 45vh; 
+	}
+	
+	div#login-register {
 	grid-area: main;
 	display: block;
 	background-color: #1b1b1b;
@@ -8,46 +69,46 @@ div#login-register {
 	width: 40%;
 	max-width: 500px;
 	left: 50%;
-}
-
-div#login, div#register {
+	}
+	
+	div#login, div#register {
 	height: 0;
 	visibility: hidden;
 	box-shadow: none;
-}
-
-div#login.selected, div#register.selected {
+	}
+	
+	div#login.selected, div#register.selected {
 	height: 100%;
 	visibility: visible;
-}
-
-div.menu {
+	}
+	
+	div.menu {
 	grid-area:header;
-}
-
-table {
+	}
+	
+	table {
 	width: 100%;
 	height: auto;
 	margin: auto;
 	border-collapse: collapse;
-}
-
-table#menu {
+	}
+	
+	table#menu {
 	height: auto;
 	margin: auto;
 	padding: 0;
 	text-align: center;
 	background-color: #555555;
-}
-
-table#menu tr {
+	}
+	
+	table#menu tr {
 	margin: 0;
 	padding: 0;
 	height: 100%;
 	background-color: #555555;
-}
-
-table#menu td,table#menu th {
+	}
+	
+	table#menu td,table#menu th {
 	width: 50%;
 	height: 100%;
 	padding: 20px 0 20px 0;
@@ -56,58 +117,58 @@ table#menu td,table#menu th {
 	text-align: center;
 	border-width: 0;
 	background-color: #333333;
-}
-
-table#menu td:hover,table#menu th:hover {
+	}
+	
+	table#menu td:hover,table#menu th:hover {
 	background-color: black;
-    color: white;
-}
-
-table#menu td#login-btn,table#menu th#login-btn {
+	color: white;
+	}
+	
+	table#menu td#login-btn,table#menu th#login-btn {
 	box-shadow: 0 -3px 0 0 #BBBBBB inset,-1.5px 0 0 0 #BBBBBB inset;
-}
-
-table#menu td#login-btn.selected,table#menu th#login-btn.selected {
+	}
+	
+	table#menu td#login-btn.selected,table#menu th#login-btn.selected {
 	box-shadow: -1.5px 0 0 0 #BBBBBB inset;
-}
-
-table#menu td#register-btn,table#menu th#register-btn {
+	}
+	
+	table#menu td#register-btn,table#menu th#register-btn {
 	box-shadow: 0 -3px 0 0 #BBBBBB inset,1.5px 0 0 0 #BBBBBB inset;
-}
-
-table#menu td#register-btn.selected,table#menu th#register-btn.selected {
+	}
+	
+	table#menu td#register-btn.selected,table#menu th#register-btn.selected {
 	box-shadow: 1.5px 0 0 0 #BBBBBB inset;
-}
-
-table#menu td.selected,table#menu th.selected {
+	}
+	
+	table#menu td.selected,table#menu th.selected {
 	background-color: #1b1b1b;
-}
-
-table#menu td#border,table#menu th#border{
+	}
+	
+	table#menu td#border,table#menu th#border{
 	margin: 0;
 	width: 0;
 	padding: 0;
 	box-shadow: none;
-}
-
-table.nav {
+	}
+	
+	table.nav {
 	text-align: center;
-}
-
-table.nav td,table.nav th {
+	}
+	
+	table.nav td,table.nav th {
 	width: 50%;
 	font-size: 110%;
 	text-align: center;
 	line-height: 100%;
 	border-width: 0;
 	background-color: black;
-}
-
-table.nav td.selected,table.nav th.selected {
+	}
+	
+	table.nav td.selected,table.nav th.selected {
 	background-color: #222222;
-}
-
-button.login-register-button {
+	}
+	
+	button.login-register-button {
 	width: 90%;
 	padding: 20px;
 	background-color: #444444;
@@ -115,11 +176,12 @@ button.login-register-button {
 	border-radius: 8px;
 	font-size: 100%;
 	color: white;
-    transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
-}
-
-button.login-register-button:hover {
+	transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+	}
+	
+	button.login-register-button:hover {
 	background-color: black;
-    color: white;
+	color: white;
 	border-color: grey;
-}
+	}
+	
