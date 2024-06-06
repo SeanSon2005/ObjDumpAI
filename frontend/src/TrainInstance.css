@@ -1,0 +1,98 @@
+.train-meta-table-container {
+    margin: 20px auto;
+    width: 50%;
+}
+
+.train-meta-table {
+    width: 100%;
+	max-width: 500px;
+    border-collapse: collapse;
+    background-color: #202020;
+    color: white;
+}
+
+.train-meta-table td {
+    border: 1px solid #444444;
+    padding: 8px;
+    text-align: left;
+}
+
+.train-table-container {
+    max-height: 500px;
+    overflow-y: auto;
+    width: 80%;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #202020;
+}
+
+.train-detail-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.train-detail-table thead {
+    position: sticky;
+    top: 0;
+    background-color: #f1f1f1;
+    z-index: 1;
+}
+
+.train-detail-table th, .train-detail-table td {
+    border: 2px solid #444444;
+    padding: 8px;
+    text-align: center;
+    overflow-wrap: break-word;
+}
+
+.train-detail-table th {
+    background-color: black;
+    color: white;
+}
+
+.train-detail-table th:nth-child(1), .train-detail-table td:nth-child(1) {
+    width: 5%;
+}
+
+.train-detail-table th:nth-child(2), .train-detail-table td:nth-child(2) {
+    width: 25%;
+}
+
+.train-detail-table th:nth-child(3), .train-detail-table td:nth-child(3) {
+    width: 70%;
+}
+
+.train-grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.train-grid-container div {
+    background-color: #1b1b1b;
+    padding: 10px;
+    border: 1px solid #444444;
+    border-radius: 5px;
+    color: white;
+}
+
+.train-back-button, .train-download-button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: darkgreen;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.train-back-button:hover, .train-download-button:hover {
+    background-color: green;
+}
+
+.train-error {
+    color: red;
+}

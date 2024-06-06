@@ -307,6 +307,8 @@ class YoloTrainer(BaseTrainer):
             cls = torch.tensor([-1]).to(self.device)
             bboxes = torch.zeros(1,4).to(self.device)
         else:
+            if len(labels.shape) == 2:
+                labels = labels.unsqueeze(0)
             sizes = torch.tensor([len(sublist) for sublist in labels])
             batch_idx = torch.cat([torch.full((size,), idx, dtype=torch.int32) for idx, size in enumerate(sizes)]).to(self.device)
             cls = torch.tensor(labels[:,:,0]).view(-1,1).to(self.device)

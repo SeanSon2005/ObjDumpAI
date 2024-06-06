@@ -13,7 +13,10 @@ from django.db.models import Q
 from celery.result import AsyncResult
 import os
 import shutil
+import json
 from django.conf import settings
+from django.shortcuts import get_object_or_404
+from django.http import Http404
 from pathlib import Path
 
 class DatasetList(generics.ListCreateAPIView):
@@ -232,8 +235,7 @@ class TrainingInitView(APIView):
         serializer = TrainingSerializer(data=data)
         if serializer.is_valid():
             training_instance = serializer.save(dataset=dataset)
-            task = train_model.delay(training_instance.id)
-            Task.objects.create(user=request.user, dataset=dataset, task_id=task.id, status="PENDING")
+            train_model.delay(training_instance.id)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -277,3 +279,41 @@ class TrainingListView(generics.ListAPIView):
             return queryset
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+class TrainingView(APIView):
+    serializer_class = TrainingSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, training_id):
+        try:
+            training = Training.objects.get(id=training_id)
+            dataset = training.dataset
+            user = request.user
+            if dataset.user != user and not dataset.public:
+                return Response({"error": "Not authorized to view this training instance."}, status=status.HTTP_403_FORBIDDEN)
+
+            serializer = self.serializer_class(training)
+            return Response(serializer.data)
+        except Training.DoesNotExist:
+            return Response({"error": "Training instance not found."}, status=status.HTTP_404_NOT_FOUND)
+
+class TrainingLiveView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, training_id):
+        training = Training.objects.get(id=training_id)
+        dataset = training.dataset
+        user = request.user
+        if dataset.user != user and not dataset.public:
+            return Response({"error": "Not authorized to view this training instance."}, status=status.HTTP_403_FORBIDDEN)
+
+        file_path = os.path.join(settings.PROTECTED_MEDIA_ROOT, f"training/{user.id}/{dataset.id}/{training.id}/live_data/live.json")
+
+        if not os.path.exists(file_path):
+            raise Http404("File not found")
+        try:
+            with open(file_path, "r") as file:
+                data = json.load(file)
+        except (IOError, ValueError) as e:
+            return Response({"detail": "Error reading file"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(data, status=status.HTTP_200_OK)

@@ -42,6 +42,12 @@
     margin-right: 8px;
 }
 
+.view-train-button {
+    background-color: darkgreen;
+    color: white;
+	margin-right: 8px;
+}
+
 .text-hl {
     color: white;
     font-size: 110%;

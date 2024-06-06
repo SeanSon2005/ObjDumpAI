@@ -28,7 +28,7 @@ class Task(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     dataset = models.ForeignKey("Dataset", on_delete=models.CASCADE)
     task_id = models.CharField(max_length=255)
-    status = models.CharField(max_length=50, default="pending")
+    status = models.CharField(max_length=50, default="PENDING")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -37,7 +37,7 @@ class Task(models.Model):
 class Training(models.Model):
     dataset = models.ForeignKey(Dataset, related_name="trainer", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
-    task_id = models.CharField(max_length=255)
+    status = models.CharField(max_length=255, default="PENDING")
     keywords = models.CharField(max_length=255, blank=True, default="")
 
     def __str__(self):

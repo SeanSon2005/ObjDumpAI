@@ -50,8 +50,6 @@ class Generator:
                 if (not force and label_name in label_names):
                     continue
 
-                print("here")
-
                 label_count += 1
 
                 label_path = os.path.join(self.output_path, label_name)

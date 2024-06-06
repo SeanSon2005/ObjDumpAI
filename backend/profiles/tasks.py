@@ -22,11 +22,11 @@ import pipeline
 
 @shared_task
 def cleanup_failed_tasks():
-    threshold = timezone.now() - timedelta(minutes=10)
-    failed_tasks = Task.objects.filter(status="FAILURE", created_at__lt=threshold)
+    threshold = timezone.now() - timedelta(minutes=30)
+    failed_tasks = Task.objects.filter(created_at__lt=threshold)
     count = failed_tasks.count()
     failed_tasks.delete()
-    logger.info(f"Deleted {count} failed tasks older than {threshold}")
+    logger.info(f"Deleted {count} tasks older than {threshold}")
 
 @shared_task(bind=True, max_retries=0)
 def train_model(self, training_id):
@@ -35,7 +35,6 @@ def train_model(self, training_id):
         dataset = training_instance.dataset
         user_id = dataset.user.id
         dataset_id = dataset.id
-        task_id = training_instance.task_id
         training_dir = os.path.join(settings.PROTECTED_MEDIA_ROOT, f"training/{user_id}/{dataset_id}/{training_id}/")
 
         os.makedirs(os.path.join(training_dir, "images"), exist_ok=True)
@@ -47,7 +46,7 @@ def train_model(self, training_id):
         for photo in dataset.photos.all():
             shutil.copy(photo.image.path, os.path.join(training_dir, "images"))
 
-        pipeline_instance = pipeline.Pipeline(os.path.join(training_dir, "images"), os.path.join(training_dir, "labels"))
+        pipeline_instance = pipeline.Pipeline(training_dir)
 
         config = DEFAULT_CONFIG
         config["data_loader"]["args"]["data_dir"] = training_dir
@@ -59,26 +58,20 @@ def train_model(self, training_id):
         queries = training_instance.keywords.split(",")
         pipeline_instance.generate_labels(queries=queries, force=False)
         pipeline_instance.train(path_to_config=config_path)
-
-        task_instance = Task.objects.get(task_id=task_id)
-        task_instance.status = "SUCCESS"
-        task_instance.save()
+        training_instance.status = "COMPLETED"
+        training_instance.save()
         return {"message": "Training completed successfully."}
+
     except Exception as e:
-        try:
-            task_instance = Task.objects.get(task_id=task_id)
-            task_instance.status = "FAILURE"
-            task_instance.save()
-        except Task.DoesNotExist:
-            logger.error(f"Task with id {task_id} does not exist.")
-        
+        training_instance.status = "FAILED"
+        training_instance.save()
         logger.error(f"Training failed: {str(e)}")
         return {"message": "Training failed", "error": str(e)}
 
 @shared_task(bind=True, max_retries=0)
 def label_dataset(self, user_id, dataset_id):
     try:
-        pipeline_instance = pipeline.Pipeline(".", ".")
+        pipeline_instance = pipeline.Pipeline(".")
         img_path = os.path.join(settings.PROTECTED_MEDIA_ROOT, f"{user_id}/{dataset_id}/")
         tags = pipeline_instance.generate_tags(img_path)
         
@@ -101,6 +94,4 @@ def label_dataset(self, user_id, dataset_id):
         task_instance.status = "FAILURE"
         task_instance.save()
         logger.error(f"Labeling failed: {str(e)}")
-        return {"message": "Labeling failed", "error": str(e)}
-
-
+        return {"message": "Labeling failed.", "error": str(e)}

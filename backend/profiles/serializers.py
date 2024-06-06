@@ -76,8 +76,8 @@ class TrainingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Training
-        fields = ["id", "dataset", "created_at", "task_id", "keywords"]
-        read_only_fields = ["id", "dataset", "created_at", "task_id"]
+        fields = ["id", "dataset", "created_at", "status", "keywords"]
+        read_only_fields = ["id", "dataset", "created_at", "status"]
 
     def validate_keywords(self, value):
         if len(value) > 10:
