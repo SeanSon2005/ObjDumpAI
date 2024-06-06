@@ -16,12 +16,13 @@ class Config:
         run_id = datetime.now().strftime(r"%Y%m%d_%H%M%S")
 
         # set and create directory for saving log and model
-        save_dir = Path(self.config["trainer"]["save_dir"])
-        self._save_dir: Path = save_dir / "models" / exp_name / run_id
-        self._log_dir: Path = save_dir / "log" / exp_name / run_id
+        model_dir = Path(self.config["trainer"]["model_dir"])
+        log_dir = Path(self.config["trainer"]["log_dir"])
+        self._save_dir: Path = model_dir
+        self._log_dir: Path = log_dir / "logs" / run_id
 
         exist_ok = run_id == ""
-        self.save_dir.mkdir(parents=True, exist_ok=exist_ok)
+        #self.save_dir.mkdir(parents=True, exist_ok=exist_ok)
         self.log_dir.mkdir(parents=True, exist_ok=exist_ok)
 
         # setup logging

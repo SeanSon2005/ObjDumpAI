@@ -1,0 +1,67 @@
+2024-06-06 15:05:40 - program - INFO - Using seed    : 24
+2024-06-06 15:05:40 - program - INFO - Using device  : cuda
+2024-06-06 15:05:40 - program - INFO - Data loaded   : CustomDataLoader
+2024-06-06 15:05:40 - program - INFO - Model set up  : Yolov8n
+2024-06-06 15:05:40 - program - INFO - Using loss    : YoloLoss
+2024-06-06 15:05:40 - program - INFO - Using metrics : ['bbox_iou']
+2024-06-06 15:05:42 - trainer - INFO -    epoch          : 1
+2024-06-06 15:05:42 - trainer - INFO -    loss           : 13.800668954849243
+2024-06-06 15:05:42 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:42 - trainer - INFO -    val_loss       : 13.07899284362793
+2024-06-06 15:05:42 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:42 - trainer - INFO -    epoch          : 2
+2024-06-06 15:05:42 - trainer - INFO -    loss           : 11.321833968162537
+2024-06-06 15:05:42 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:42 - trainer - INFO -    val_loss       : 13.092184066772461
+2024-06-06 15:05:42 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:43 - trainer - INFO -    epoch          : 3
+2024-06-06 15:05:43 - trainer - INFO -    loss           : 9.691366195678711
+2024-06-06 15:05:43 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:43 - trainer - INFO -    val_loss       : 13.123187065124512
+2024-06-06 15:05:43 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:44 - trainer - INFO -    epoch          : 4
+2024-06-06 15:05:44 - trainer - INFO -    loss           : 8.55089004834493
+2024-06-06 15:05:44 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:44 - trainer - INFO -    val_loss       : 13.155654907226562
+2024-06-06 15:05:44 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:45 - trainer - INFO -    epoch          : 5
+2024-06-06 15:05:45 - trainer - INFO -    loss           : 7.449246843655904
+2024-06-06 15:05:45 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:45 - trainer - INFO -    val_loss       : 13.250802993774414
+2024-06-06 15:05:45 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:46 - trainer - INFO -    epoch          : 6
+2024-06-06 15:05:46 - trainer - INFO -    loss           : 7.044954180717468
+2024-06-06 15:05:46 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:46 - trainer - INFO -    val_loss       : 13.265432357788086
+2024-06-06 15:05:46 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:47 - trainer - INFO -    epoch          : 7
+2024-06-06 15:05:47 - trainer - INFO -    loss           : 6.2401764790217085
+2024-06-06 15:05:47 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:47 - trainer - INFO -    val_loss       : 13.191308975219727
+2024-06-06 15:05:47 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:47 - trainer - INFO -    epoch          : 8
+2024-06-06 15:05:47 - trainer - INFO -    loss           : 5.834830800692241
+2024-06-06 15:05:47 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:47 - trainer - INFO -    val_loss       : 13.256776809692383
+2024-06-06 15:05:47 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:48 - trainer - INFO -    epoch          : 9
+2024-06-06 15:05:48 - trainer - INFO -    loss           : 5.327581365903218
+2024-06-06 15:05:48 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:48 - trainer - INFO -    val_loss       : 13.362553596496582
+2024-06-06 15:05:48 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:49 - trainer - INFO -    epoch          : 10
+2024-06-06 15:05:49 - trainer - INFO -    loss           : 5.037916858990987
+2024-06-06 15:05:49 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:49 - trainer - INFO -    val_loss       : 13.469581604003906
+2024-06-06 15:05:49 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:50 - trainer - INFO -    epoch          : 11
+2024-06-06 15:05:50 - trainer - INFO -    loss           : 4.524731496969859
+2024-06-06 15:05:50 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:50 - trainer - INFO -    val_loss       : 13.241418838500977
+2024-06-06 15:05:50 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:51 - trainer - INFO -    epoch          : 12
+2024-06-06 15:05:51 - trainer - INFO -    loss           : 4.453765690326691
+2024-06-06 15:05:51 - trainer - INFO -    bbox_iou       : 0
+2024-06-06 15:05:51 - trainer - INFO -    val_loss       : 13.476846694946289
+2024-06-06 15:05:51 - trainer - INFO -    val_bbox_iou   : 0
+2024-06-06 15:05:51 - trainer - INFO - Validation performance didn't improve for 10 epochs. Training stops.

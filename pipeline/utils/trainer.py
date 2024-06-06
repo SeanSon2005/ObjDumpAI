@@ -124,8 +124,10 @@ class BaseTrainer:
                     break
 
             # save model checkpoint
-            if epoch % self.save_period == 0:
-                self._save_checkpoint(epoch, save_best=best)
+            # if epoch % self.save_period == 0:
+            #     self._save_checkpoint(epoch, save_best=best)
+            # save latest checkpoint
+                self._save_latest_checkpoint()
 
     def _save_checkpoint(self, epoch: int, save_best: bool = False) -> None:
         """Save the current model checkpoint.
@@ -152,7 +154,17 @@ class BaseTrainer:
             best_fname = str(self.checkpoint_dir / "model_best.pth")
             torch.save(state, best_fname)
             self.logger.info("Best checkpoint saved: %s ...", best_fname)
-
+    def _save_latest_checkpoint(self) -> None:
+        arch = type(self.model).__name__
+        state = {
+            "arch": arch,
+            "state_dict": self.model.state_dict(),
+            "optimizer": self.optimizer.state_dict(),
+            "monitor_best": self.mnt_best,
+            "config": self.config,
+        }
+        fname = str(self.checkpoint_dir / f"last.pth")
+        torch.save(state, fname)
 
 class YoloTrainer(BaseTrainer):
     def __init__(
