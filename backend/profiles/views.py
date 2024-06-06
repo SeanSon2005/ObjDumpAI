@@ -127,6 +127,44 @@ class PhotoList(generics.ListCreateAPIView):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
+class TrainingPhotoList(generics.ListAPIView):
+    serializer_class = PhotoSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        training_id = self.kwargs["training_id"]
+        try:
+            training = Training.objects.get(id=training_id)
+        except Training.DoesNotExist:
+            return Response({"error": "Training instance does not exist."}, status=status.HTTP_404_NOT_FOUND)
+
+        dataset = training.dataset
+
+        if dataset.user != self.request.user and not dataset.public:
+            return Response({"error": "You do not have permission to access this dataset."}, status=status.HTTP_403_FORBIDDEN)
+
+        return Photo.objects.filter(dataset__id=dataset.id)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        if isinstance(queryset, Response):
+            return queryset
+        
+        training_id = self.kwargs["training_id"]
+        adjusted_photos = []
+        for photo in queryset:
+            photo_api = os.path.join(f"/protected_media/training/{photo.dataset.user.id}/{photo.dataset.id}/{training_id}/annotated_images", os.path.basename(photo.image.path))
+            photo_path = os.path.join(settings.PROTECTED_MEDIA_ROOT, f"training/{photo.dataset.user.id}/{photo.dataset.id}/{training_id}/annotated_images", os.path.basename(photo.image.path))
+            if os.path.exists(photo_path):
+                adjusted_photos.append({
+                    "id": photo.id,
+                    "image": photo_api,
+                    "filename": os.path.basename(photo.image.path),
+                    "label": photo.label,
+                    "dataset": photo.dataset.id,
+                })
+        return Response(adjusted_photos)
+
 class PhotoLabelUpdateView(generics.RetrieveUpdateAPIView):
     serializer_class = PhotoLabelUpdateSerializer
     permission_classes = [IsAuthenticated]
@@ -291,7 +329,14 @@ class TrainingView(APIView):
             user = request.user
             if dataset.user != user and not dataset.public:
                 return Response({"error": "Not authorized to view this training instance."}, status=status.HTTP_403_FORBIDDEN)
-
+            live_path = os.path.join(settings.PROTECTED_MEDIA_ROOT, f"training/{user.id}/{dataset.id}/{training.id}/live_data/live.json")
+            try:
+                with open(live_path, "r") as file:
+                    data = json.load(file)
+                    training.epochs = int(data["Epoch"])
+                    training.save()
+            except Exception as e:
+                pass
             serializer = self.serializer_class(training)
             return Response(serializer.data)
         except Training.DoesNotExist:

@@ -75,7 +75,10 @@ const DatasetReadonly = () => {
                 <button onClick={() => navigate(`/user/${ownerId}`)} className="owner-button">
                     Owner
                 </button>
-                <br/><br/>
+				<button onClick={() => navigate(`/train/${datasetId}`)} className="train-button">
+                    Trainings
+                </button>
+                <br/>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 {photos.length > 0 ? (
                     <div className="table-container">

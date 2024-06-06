@@ -1,3 +1,5 @@
+
+
 .train-meta-table-container {
     margin: 20px auto;
     width: 50%;
@@ -18,7 +20,8 @@
 }
 
 .train-table-container {
-    max-height: 500px;
+	max-height: 300px;
+	max-width: 1200px;
     overflow-y: auto;
     width: 80%;
     margin: 0 auto;
@@ -28,9 +31,9 @@
 }
 
 .train-detail-table {
-    width: 100%;
+	width: 100%;
     border-collapse: collapse;
-    table-layout: fixed;
+	table-layout: fixed;
 }
 
 .train-detail-table thead {
@@ -57,40 +60,24 @@
 }
 
 .train-detail-table th:nth-child(2), .train-detail-table td:nth-child(2) {
-    width: 25%;
+    width: 10%;
 }
 
 .train-detail-table th:nth-child(3), .train-detail-table td:nth-child(3) {
-    width: 70%;
-}
-
-.train-grid-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.train-grid-container div {
-    background-color: #1b1b1b;
-    padding: 10px;
-    border: 1px solid #444444;
-    border-radius: 5px;
-    color: white;
+    width: 35%;
 }
 
 .train-back-button, .train-download-button {
-    margin-top: 20px;
+	margin-right: 8px;
     padding: 10px;
-    background-color: darkgreen;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
-.train-back-button:hover, .train-download-button:hover {
-    background-color: green;
+.train-download-button {
+	background-color: darkgreen;
 }
 
 .train-error {

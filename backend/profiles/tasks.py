@@ -58,6 +58,7 @@ def train_model(self, training_id):
         queries = training_instance.keywords.split(",")
         pipeline_instance.generate_labels(queries=queries, force=False)
         pipeline_instance.train(path_to_config=config_path)
+        training_instance.completed_at = timezone.now()
         training_instance.status = "COMPLETED"
         training_instance.save()
         return {"message": "Training completed successfully."}
