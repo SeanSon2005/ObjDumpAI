@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from './axiosConfig';
 import './DatasetReadonly.css';
 
 const DatasetReadonly = () => {
     const { datasetId } = useParams();
-    const location = useLocation();
     const navigate = useNavigate();
     const [photos, setPhotos] = useState([]);
     const [selectedPhoto, setSelectedPhoto] = useState(null);

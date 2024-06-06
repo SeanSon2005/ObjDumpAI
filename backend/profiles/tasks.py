@@ -1,12 +1,16 @@
 from celery import shared_task, current_task
-from .models import Task, Photo
+from .models import Task, Photo, Training
 from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
 import os
 import sys
 import time
+import shutil
+import yaml
+import json
 from celery.utils.log import get_task_logger
+from .config import DEFAULT_CONFIG
 
 logger = get_task_logger(__name__)
 
@@ -24,28 +28,57 @@ def cleanup_failed_tasks():
     failed_tasks.delete()
     logger.info(f"Deleted {count} failed tasks older than {threshold}")
 
-@shared_task(bind=True)
-def train_model(self, user_id, dataset_id):
-    return {"message": "unimplemented"}
-    #try:
-    #    pipeline_instance = pipeline.Pipeline()
-    #    config_path = os.path.join(settings.PROTECTED_MEDIA_ROOT, f"{user_id}/{dataset_id}/config.yaml")
-    #    pipeline_instance.train(config_path)
-    #    task_instance = Task.objects.get(task_id=self.request.id)
-    #    task_instance.status = "SUCCESS"
-    #    task_instance.save()
-    #    return {"message": "Training completed successfully."}
-    #except Exception as e:
-    #    task_instance = Task.objects.get(task_id=self.request.id)
-    #    task_instance.status = "FAILURE"
-    #    task_instance.save()
-    #    logger.error(f"Training failed: {str(e)}")
-#    return self.retry(exc=e)
+@shared_task(bind=True, max_retries=0)
+def train_model(self, training_id):
+    try:
+        training_instance = Training.objects.get(id=training_id)
+        dataset = training_instance.dataset
+        user_id = dataset.user.id
+        dataset_id = dataset.id
+        task_id = training_instance.task_id
+        training_dir = os.path.join(settings.PROTECTED_MEDIA_ROOT, f"training/{user_id}/{dataset_id}/{training_id}/")
+
+        os.makedirs(os.path.join(training_dir, "images"), exist_ok=True)
+        os.makedirs(os.path.join(training_dir, "annotated_images"), exist_ok=True)
+        os.makedirs(os.path.join(training_dir, "labels"), exist_ok=True)
+        os.makedirs(os.path.join(training_dir, "live_data"), exist_ok=True)
+        os.makedirs(os.path.join(training_dir, "runs"), exist_ok=True)
+
+        for photo in dataset.photos.all():
+            shutil.copy(photo.image.path, os.path.join(training_dir, "images"))
+
+        pipeline_instance = pipeline.Pipeline(os.path.join(training_dir, "images"), os.path.join(training_dir, "labels"))
+
+        config = DEFAULT_CONFIG
+        config["data_loader"]["args"]["data_dir"] = training_dir
+        config["trainer"]["save_dir"] = os.path.join(training_dir, "runs")
+        config_path = os.path.join(training_dir, "config.yaml")
+        with open(config_path, "w") as config_file:
+            yaml.dump(config, config_file)
+
+        queries = training_instance.keywords.split(",")
+        pipeline_instance.generate_labels(queries=queries, force=False)
+        pipeline_instance.train(path_to_config=config_path)
+
+        task_instance = Task.objects.get(task_id=task_id)
+        task_instance.status = "SUCCESS"
+        task_instance.save()
+        return {"message": "Training completed successfully."}
+    except Exception as e:
+        try:
+            task_instance = Task.objects.get(task_id=task_id)
+            task_instance.status = "FAILURE"
+            task_instance.save()
+        except Task.DoesNotExist:
+            logger.error(f"Task with id {task_id} does not exist.")
+        
+        logger.error(f"Training failed: {str(e)}")
+        return {"message": "Training failed", "error": str(e)}
 
 @shared_task(bind=True, max_retries=0)
 def label_dataset(self, user_id, dataset_id):
     try:
-        pipeline_instance = pipeline.Pipeline()
+        pipeline_instance = pipeline.Pipeline(".", ".")
         img_path = os.path.join(settings.PROTECTED_MEDIA_ROOT, f"{user_id}/{dataset_id}/")
         tags = pipeline_instance.generate_tags(img_path)
         
@@ -69,3 +102,5 @@ def label_dataset(self, user_id, dataset_id):
         task_instance.save()
         logger.error(f"Labeling failed: {str(e)}")
         return {"message": "Labeling failed", "error": str(e)}
+
+

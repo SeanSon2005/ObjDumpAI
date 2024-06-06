@@ -152,7 +152,7 @@ const Datasets = () => {
                                             </button>
                                         </td>
                                         <td>
-                                            <button onClick={() => navigate(`/datasets/${dataset.id}`, { state: { name: dataset.name } })} className="view-button">
+                                            <button onClick={() => navigate(`/datasets/${dataset.id}`, { state: { name: dataset.name } })} className="manage-button">
                                                 Manage
                                             </button>
                                             <button onClick={() => handleDeleteClick(dataset)} className="delete-button">

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from './axiosConfig';
 import JSZip from 'jszip';
 import './DatasetUpload.css';
@@ -7,7 +7,6 @@ import './DatasetUpload.css';
 const DatasetUpload = () => {
     const { datasetId } = useParams();
     const navigate = useNavigate();
-    const location = useLocation();
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
     const [files, setFiles] = useState(null);

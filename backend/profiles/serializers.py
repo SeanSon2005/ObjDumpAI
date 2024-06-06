@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Photo, Dataset, Task
+from .models import Photo, Dataset, Task, Training
 import os
 
 class UserSerializer(serializers.ModelSerializer):
@@ -65,6 +65,35 @@ class PhotoLabelUpdateSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ['task_id', 'status', 'created_at']
+        fields = ["task_id", "status", "created_at"]
 
+class TrainingSerializer(serializers.ModelSerializer):
+    keywords = serializers.ListField(
+        child=serializers.CharField(max_length=20),
+        allow_empty=False,
+        max_length=10,
+    )
 
+    class Meta:
+        model = Training
+        fields = ["id", "dataset", "created_at", "task_id", "keywords"]
+        read_only_fields = ["id", "dataset", "created_at", "task_id"]
+
+    def validate_keywords(self, value):
+        if len(value) > 10:
+            raise serializers.ValidationError("You can specify up to 10 keywords.")
+        for keyword in value:
+            if len(keyword) > 20:
+                raise serializers.ValidationError("Each keyword can be up to 20 characters long.")
+        return value
+
+    def create(self, validated_data):
+        keywords = validated_data.pop("keywords")
+        keywords_str = ",".join(keywords)
+        training = Training.objects.create(keywords=keywords_str, **validated_data)
+        return training
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['keywords'] = instance.keywords.split(',')
+        return representation

@@ -8,10 +8,10 @@ import numpy as np
 import zlib
 
 class Generator:
-    def __init__(self, logger: logging.Logger, input_path="data/images", output_path="data/labels"):
-        self.output_path = output_path
-        self.input_path = input_path
-        self.input_path2 = "data/annotated_images"
+    def __init__(self, logger: logging.Logger, base_path="."):
+        self.output_path = os.path.join(base_path, "labels")
+        self.input_path = os.path.join(base_path, "images")
+        self.input_path2 = os.path.join(base_path, "annotated_images")
         self.logger = logger
         self.conf_threshold = 0.3
         self.class_dict = {}
@@ -47,9 +47,10 @@ class Generator:
                 annotated_image_path = os.path.join(self.input_path2, image_name)
                 label_name = str(zlib.adler32(image_name.encode('utf-8'))) + ".txt"
 
-                # Skip Images that already have labels
                 if (not force and label_name in label_names):
                     continue
+
+                print("here")
 
                 label_count += 1
 

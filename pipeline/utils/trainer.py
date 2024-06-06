@@ -7,6 +7,7 @@ from torchvision.utils import make_grid
 
 from .config import Config
 from .logger import MetricTracker, LiveWriter, get_logger
+import os
 
 
 class BaseTrainer:
@@ -34,7 +35,7 @@ class BaseTrainer:
             name="trainer", verbosity=0
         )
         self.writer = LiveWriter(
-            "data/live_data", self.logger
+            os.path.join(self.config["data_loader"]["args"]["data_dir"], "live_data"), self.logger
         )
         self.log_step: int = cfg_trainer["log_step"]
         self.save_period: int = cfg_trainer["save_period"]
@@ -292,6 +293,7 @@ class YoloTrainer(BaseTrainer):
         sizes = torch.tensor([len(sublist) for sublist in labels])
         batch_idx = torch.cat([torch.full((size,), idx, dtype=torch.int32) for idx, size in enumerate(sizes)]).to(self.device)
 
+        print(labels.shape)
         cls = torch.tensor(labels[:,:,0]).view(-1,1).to(self.device)
         bboxes = torch.tensor(labels[:,:,1:]).view(-1,4).to(self.device)
         images = torch.tensor(images / 255).to(self.device)

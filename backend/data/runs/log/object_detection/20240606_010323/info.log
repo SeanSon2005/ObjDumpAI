@@ -1,0 +1,6 @@
+2024-06-06 01:03:23 - celery.redirected - WARNING - Using seed    : 24
+2024-06-06 01:03:23 - program - INFO - Using seed    : 24
+2024-06-06 01:03:23 - celery.redirected - WARNING - Using device  : cuda
+2024-06-06 01:03:23 - program - INFO - Using device  : cuda
+2024-06-06 01:03:23 - celery.redirected - WARNING - Task profiles.tasks.train_model[c45b8013-a8cb-465b-9d18-9979bea4b330] succeeded in 1.4627240629997686s: {'message': 'Training failed', 'error': '/home/enzo/src/hw/good/SAMforEmbeddedDevices/backend/protected_media/training/1/18/20/labels/242025256.txt not found.'}
+2024-06-06 01:03:23 - celery.app.trace - INFO - Task profiles.tasks.train_model[c45b8013-a8cb-465b-9d18-9979bea4b330] succeeded in 1.4627240629997686s: {'message': 'Training failed', 'error': '/home/enzo/src/hw/good/SAMforEmbeddedDevices/backend/protected_media/training/1/18/20/labels/242025256.txt not found.'}

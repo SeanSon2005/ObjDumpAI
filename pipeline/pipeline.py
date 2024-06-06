@@ -12,11 +12,11 @@ from generator.dino import Generator
 from generator.tagger import Tag_Generator
 
 class Pipeline:
-    def __init__(self):
+    def __init__(self, base_path):
         self.logger = get_logger(
             name="program", verbosity=0
         )
-        self.generator = Generator(self.logger)
+        self.generator = Generator(self.logger, base_path)
         self.tag_generator = Tag_Generator()
 
     def generate_labels(self, queries: list[str], force: bool):
@@ -96,6 +96,6 @@ class Pipeline:
         trainer.train()
 
 if __name__ == "__main__":
-    test_pipeline = Pipeline()
-    test_pipeline.generate_labels(queries=["car","traffic cone"], force=False)
-    test_pipeline.train(path_to_config="data/training_configs/config_default.yaml")
+    test_pipeline = Pipeline("/home/enzo/src/hw/good/SAMforEmbeddedDevices/backend/protected_media/training/1/18/31/")
+    test_pipeline.generate_labels(queries=["car"], force=True)
+    #test_pipeline.train(path_to_config="/home/enzo/src/hw/good/SAMforEmbeddedDevices/backend/protected_media/training/1/18/31/config.yaml")

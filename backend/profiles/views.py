@@ -1,7 +1,7 @@
 from rest_framework import generics
 from django.contrib.auth.models import User
-from .serializers import UserSerializer, PhotoSerializer, DatasetSerializer, PhotoLabelUpdateSerializer, TaskSerializer, UserPublicInfoSerializer, DatasetPublicSerializer
-from .models import Photo, Dataset, Task
+from .serializers import UserSerializer, PhotoSerializer, DatasetSerializer, PhotoLabelUpdateSerializer, TaskSerializer, UserPublicInfoSerializer, DatasetPublicSerializer, TrainingSerializer
+from .models import Photo, Dataset, Task, Training
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
@@ -12,6 +12,9 @@ from .tasks import train_model, label_dataset
 from django.db.models import Q
 from celery.result import AsyncResult
 import os
+import shutil
+from django.conf import settings
+from pathlib import Path
 
 class DatasetList(generics.ListCreateAPIView):
     serializer_class = DatasetSerializer
@@ -212,3 +215,65 @@ class TaskStatusView(APIView):
         
         serializer = TaskSerializer(task)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class TrainingInitView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, dataset_id):
+        try:
+            dataset = Dataset.objects.get(id=dataset_id, user=request.user)
+        except Dataset.DoesNotExist:
+            return Response({"error": "Dataset not found or does not belong to the user."}, status=status.HTTP_404_NOT_FOUND)
+
+        data = {
+            "keywords": request.data.get("keywords", [])
+        }
+        
+        serializer = TrainingSerializer(data=data)
+        if serializer.is_valid():
+            training_instance = serializer.save(dataset=dataset)
+            task = train_model.delay(training_instance.id)
+            Task.objects.create(user=request.user, dataset=dataset, task_id=task.id, status="PENDING")
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class TrainingDeleteView(generics.DestroyAPIView):
+    queryset = Training.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        delete_user_training_directory(instance)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+def delete_user_training_directory(training):
+    user_directory = Path(os.path.join(settings.PROTECTED_MEDIA_ROOT, f"training/{training.dataset.user.id}/{training.dataset.id}/{training.id}"))
+    print(user_directory)
+    if user_directory.exists() and user_directory.is_dir():
+        shutil.rmtree(user_directory)
+
+class TrainingListView(generics.ListAPIView):
+    serializer_class = TrainingSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        dataset_id = self.kwargs['dataset_id']
+        try:
+            dataset = Dataset.objects.get(id=dataset_id)
+        except Dataset.DoesNotExist:
+            return Response({"error": "Dataset not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        user = self.request.user
+        if dataset.user == user or dataset.public:
+            return Training.objects.filter(dataset=dataset)
+        else:
+            return Training.objects.none()
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        if isinstance(queryset, Response):
+            return queryset
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

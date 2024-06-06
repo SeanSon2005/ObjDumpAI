@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from './axiosConfig';
 import './DatasetDetail.css';
 
 const DatasetDetail = () => {
     const { datasetId } = useParams();
-    const location = useLocation();
     const navigate = useNavigate();
     const [photos, setPhotos] = useState([]);
     const [selectedPhoto, setSelectedPhoto] = useState(null);
@@ -15,9 +14,7 @@ const DatasetDetail = () => {
     const [showImageModal, setShowImageModal] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
     const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [publicity, setPublicity] = useState(false);
     const [labelingStatus, setLabelingStatus] = useState('');
-    const [taskId, setTaskId] = useState(null);
 	const [datasetName, setDatasetName] = useState(null);
 
     useEffect(() => {
@@ -46,7 +43,6 @@ const DatasetDetail = () => {
         axios.get(`/api/datasets/${datasetId}/photos/`)
             .then(response => {
                 setPhotos(response.data);
-                setPublicity(response.data.public);
             })
             .catch(error => {
                 setError("There was an error fetching the dataset.");
@@ -58,7 +54,6 @@ const DatasetDetail = () => {
         axios.post(`/api/datasets/${datasetId}/labeler/`)
             .then(response => {
                 const taskId = response.data.task_id;
-                setTaskId(taskId);
                 setLabelingStatus('Labeling...');
                 checkTaskStatus(taskId);
             })
@@ -89,7 +84,7 @@ const DatasetDetail = () => {
                     setError("There was an error checking the task status.");
                     console.error(error);
                 });
-        }, 5000); // Check every 5 seconds
+        }, 5000);
     };
 
     const deleteTask = (taskId) => {
@@ -182,8 +177,11 @@ const DatasetDetail = () => {
                 <button onClick={handleLabelClick} className="label-button">
                     Label
                 </button>
-                <button onClick={() => navigate(`/upload/${datasetId}`, { state: { name: datasetName } })} className="upload-button">
+                <button onClick={() => navigate(`/upload/${datasetId}`)} className="upload-button">
                     Upload
+                </button>
+				<button onClick={() => navigate(`/train/${datasetId}`)} className="train-button">
+                    Train
                 </button>
                 <button onClick={() => navigate('/datasets')} style={{ color: "white" }}>
                     Back
