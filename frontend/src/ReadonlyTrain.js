@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from './axiosConfig';
 import './DatasetTrain.css';
 
-const DatasetTrain = () => {
+const ReadonlyTrain = () => {
     const { datasetId } = useParams();
     const navigate = useNavigate();
     const [trainings, setTrainings] = useState([]);
@@ -125,13 +125,10 @@ const DatasetTrain = () => {
             <div>
                 <h2>{datasetName}</h2>
                 <br/>
-                <button onClick={handleCreateClick} className="create-button">
-                    Create
-                </button>
                 <button onClick={() => navigate(-1)} style={{ color: "white" }}>
                     Back
                 </button>
-                <br/>
+                <br/><br/>
                 {error && <p style={{ color: 'red' }}>{error}</p>}
                 {trainings.length > 0 ? (
                     <div className="table-container">
@@ -153,9 +150,6 @@ const DatasetTrain = () => {
                                         <td>
                                             <button onClick={() => navigate(`/trainings/${training.id}`)} className="view-train-button">
                                                 View
-                                            </button>
-                                            <button onClick={() => handleDeleteClick(training)} className="delete-button">
-                                                Delete
                                             </button>
                                         </td>
                                     </tr>
@@ -215,4 +209,4 @@ const DatasetTrain = () => {
     );
 };
 
-export default DatasetTrain;
+export default ReadonlyTrain;

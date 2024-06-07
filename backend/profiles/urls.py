@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import UserCreate, PhotoList, DatasetDetail, DatasetList, PhotoLabelUpdateView, PhotoDeleteView, DatasetReadonlyView, TogglePublicityView, DatasetSearchView, TaskStatusView, DatasetLabelerView, UserPublicInfoView, DatasetPublicView, TrainingInitView, TrainingListView, TrainingDeleteView, TrainingView, TrainingLiveView, TrainingPhotoList
+from .views import UserCreate, PhotoList, DatasetDetail, DatasetList, PhotoLabelUpdateView, PhotoDeleteView, DatasetReadonlyView, TogglePublicityView, DatasetSearchView, TaskStatusView, DatasetLabelerView, UserPublicInfoView, DatasetPublicView, TrainingInitView, TrainingListView, TrainingDeleteView, TrainingView, TrainingLiveView, TrainingPhotoList, TrainingModelView
 from rest_framework.authtoken.views import ObtainAuthToken
 
 urlpatterns = [
@@ -23,4 +23,5 @@ urlpatterns = [
     path("trainings/<int:training_id>/", TrainingView.as_view(), name="view-training"),
     path("trainings/<int:training_id>/live/",TrainingLiveView.as_view(), name="live-training"),
     path("trainings/<int:training_id>/annotated/",TrainingPhotoList.as_view(), name="annotated-photos"),
+    path("trainings/<int:training_id>/model/",TrainingModelView.as_view(), name="training-model"),
 ]

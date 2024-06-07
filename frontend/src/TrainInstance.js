@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from './axiosConfig';
 import './TrainInstance.css';
@@ -11,7 +11,7 @@ const TrainInstance = () => {
     const [imageUrl, setImageUrl] = useState('');
     const [showImageModal, setShowImageModal] = useState(false);
     const [error, setError] = useState(null);
-    const [intervalId, setIntervalId] = useState(null);
+    const intervalIdRef = useRef(null);
 
     const fetchTraining = () => {
         axios.get(`/api/trainings/${trainingId}/`)
@@ -19,9 +19,11 @@ const TrainInstance = () => {
                 const trainingData = response.data;
                 setTraining(trainingData);
 
-                if (trainingData.status === 'COMPLETED') {
-                    clearInterval(intervalId);
-                    fetchAnnotatedPhotos();
+                if (trainingData.status === 'COMPLETED' || trainingData.status === 'FAILED') {
+                    clearInterval(intervalIdRef.current);
+                    if (trainingData.status === 'COMPLETED') {
+                        fetchAnnotatedPhotos();
+                    }
                 }
             })
             .catch(error => {
@@ -40,22 +42,22 @@ const TrainInstance = () => {
                 console.error(error);
             });
     };
-
-    const downloadModel = () => {
-        axios.get(`/api/trainings/${trainingId}/model`, { responseType: 'blob' })
-            .then(response => {
-                const url = window.URL.createObjectURL(new Blob([response.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', `model_${trainingId}.zip`);
-                document.body.appendChild(link);
-                link.click();
-            })
-            .catch(error => {
-                setError("There was an error downloading the model.");
-                console.error(error);
-            });
-    };
+	const downloadModel = () => {
+    axios.get(`/api/trainings/${trainingId}/model/`, { responseType: 'blob' })
+        .then(response => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `model_${trainingId}.pth`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        })
+        .catch(error => {
+            setError("There was an error downloading the model.");
+            console.error(error);
+        });
+	};
 
     const calculateElapsedTime = () => {
         if (!training) return '';
@@ -73,15 +75,15 @@ const TrainInstance = () => {
     useEffect(() => {
         fetchTraining();
         const id = setInterval(fetchTraining, 1000);
-        setIntervalId(id);
+        intervalIdRef.current = id;
         return () => clearInterval(id);
     }, [trainingId]);
 
     useEffect(() => {
-        if (training && training.status === 'COMPLETED') {
-            clearInterval(intervalId);
+        if (training && (training.status === 'COMPLETED' || training.status === 'FAILED')) {
+            clearInterval(intervalIdRef.current);
         }
-    }, [training, intervalId]);
+    }, [training]);
 
     const handleFilenameClick = (photo, event) => {
         event.preventDefault();
@@ -145,7 +147,7 @@ const TrainInstance = () => {
                         
                         {training.status === 'PENDING' && (
                             <>
-                                <h3 style={{ "font-size": "120%" }}>Training in Progress</h3>
+                                <h3 style={{ "fontSize": "120%" }}>Training in Progress</h3>
                                 <br />
                                 <button onClick={() => navigate(-1)} className="train-back-button">
                                     Back
@@ -154,7 +156,7 @@ const TrainInstance = () => {
                         )}
                         {training.status === 'COMPLETED' && (
                             <>
-                                <h3 style={{ "font-size": "120%" }}>Annotated Photos</h3>
+                                <h3 style={{ "fontSize": "120%" }}>Annotated Photos</h3>
                                 <br />
                                 <button onClick={downloadModel} className="train-download-button">
                                     Download Model
@@ -199,6 +201,13 @@ const TrainInstance = () => {
                                         </div>
                                     </div>
                                 )}
+                            </>
+                        )}
+                        {training.status === 'FAILED' && (
+                            <>
+                                <button onClick={() => navigate(-1)} className="train-back-button">
+                                    Back
+                                </button>
                             </>
                         )}
                     </>

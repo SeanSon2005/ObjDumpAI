@@ -183,7 +183,7 @@ const DatasetDetail = () => {
 				<button onClick={() => navigate(`/train/${datasetId}`)} className="train-button">
                     Train
                 </button>
-                <button onClick={() => navigate('/datasets')} style={{ color: "white" }}>
+                <button onClick={() => navigate(-1)} style={{ color: "white" }}>
                     Back
                 </button>
                 <br/>

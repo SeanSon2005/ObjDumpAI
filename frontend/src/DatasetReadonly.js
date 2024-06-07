@@ -75,7 +75,7 @@ const DatasetReadonly = () => {
                 <button onClick={() => navigate(`/user/${ownerId}`)} className="owner-button">
                     Owner
                 </button>
-				<button onClick={() => navigate(`/train/${datasetId}`)} className="train-button">
+				<button onClick={() => navigate(`/readonly-train/${datasetId}`, { state: { showCreateButton: false }})} className="train-button">
                     Trainings
                 </button>
                 <br/>

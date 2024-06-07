@@ -50,6 +50,8 @@ def train_model(self, training_id):
 
         config = DEFAULT_CONFIG
         config["data_loader"]["args"]["data_dir"] = training_dir
+        config["trainer"]["model_dir"] = training_dir
+        config["trainer"]["log_dir"] = training_dir
         config["trainer"]["save_dir"] = os.path.join(training_dir, "runs")
         config_path = os.path.join(training_dir, "config.yaml")
         with open(config_path, "w") as config_file:
@@ -64,6 +66,7 @@ def train_model(self, training_id):
         return {"message": "Training completed successfully."}
 
     except Exception as e:
+        training_instance.completed_at = timezone.now()
         training_instance.status = "FAILED"
         training_instance.save()
         logger.error(f"Training failed: {str(e)}")

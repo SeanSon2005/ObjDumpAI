@@ -16,7 +16,7 @@ import shutil
 import json
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from django.http import Http404
+from django.http import Http404, FileResponse
 from pathlib import Path
 
 class DatasetList(generics.ListCreateAPIView):
@@ -284,6 +284,9 @@ class TrainingDeleteView(generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
+        if instance.dataset.user != request.user:
+            return Response({"detail": "You do not have permission to delete this training instance."}, status=status.HTTP_403_FORBIDDEN)
+
         delete_user_training_directory(instance)
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -362,3 +365,29 @@ class TrainingLiveView(APIView):
         except (IOError, ValueError) as e:
             return Response({"detail": "Error reading file"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response(data, status=status.HTTP_200_OK)
+
+class TrainingModelView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, training_id):
+        try:
+            training = Training.objects.get(id=training_id)
+            dataset = training.dataset
+        except Training.DoesNotExist:
+            return Response({"error": "Training instance not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        user = request.user
+        if dataset.user != user and not dataset.public:
+            return Response({"error": "Not authorized to view this training instance."}, status=status.HTTP_403_FORBIDDEN)
+
+        file_path = os.path.join(settings.PROTECTED_MEDIA_ROOT, f"training/{dataset.user.id}/{dataset.id}/{training.id}/last.pth")
+
+        if not os.path.exists(file_path):
+            raise Http404("File not found")
+        
+        try:
+            response = FileResponse(open(file_path, "rb"), content_type='application/octet-stream')
+            response['Content-Disposition'] = 'attachment; filename="model.pth"'
+            return response
+        except IOError:
+            return Response({"detail": "Error reading file"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

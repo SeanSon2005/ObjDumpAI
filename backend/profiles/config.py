@@ -47,7 +47,7 @@ DEFAULT_CONFIG = {
         'epochs': 100,
         'log_step': 10,
         'save_dir': 'data/runs/',
-        'save_period': 5,
+        'save_period': 100,
         'monitor': 'min val_loss',
         'early_stop': 10,
     },
