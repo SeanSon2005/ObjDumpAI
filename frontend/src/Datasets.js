@@ -118,6 +118,7 @@ const Datasets = () => {
 
 
     return (
+		<center>
         <div className="full-window-container">
             <div className="content-container">
                 <div className="header-container">
@@ -126,7 +127,7 @@ const Datasets = () => {
                         New Dataset
                     </button>
                 </div>
-                {error && <p className="error-message">{error}</p>}
+                {error && <p style={{ color: "red" }}>{error}</p>}
                 {datasets.length > 0 ? (
                     <div className="table-container">
                         <table className="datasets-table">
@@ -230,6 +231,7 @@ const Datasets = () => {
                 )}
             </div>
         </div>
+		</center>
     );
 };
 
