@@ -116,16 +116,17 @@ const Datasets = () => {
         setSelectedDataset(null);
     };
 
+
     return (
-        <center>
-            <div>
-                <h2>Your Datasets</h2>
-                <br />
-                <button onClick={() => setShowModal(true)} className="new-dataset-button">
-                    New Dataset
-                </button>
-                <br />
-                {error && <p style={{ color: 'red' }}>{error}</p>}
+        <div className="full-window-container">
+            <div className="content-container">
+                <div className="header-container">
+                    <h2>Your Datasets</h2>
+                    <button onClick={() => setShowModal(true)} className="new-dataset-button">
+                        New Dataset
+                    </button>
+                </div>
+                {error && <p className="error-message">{error}</p>}
                 {datasets.length > 0 ? (
                     <div className="table-container">
                         <table className="datasets-table">
@@ -172,15 +173,14 @@ const Datasets = () => {
                     <div className="modal">
                         <div className="modal-content">
                             <span className="close" onClick={() => setShowModal(false)}>&times;</span>
-
                             <h2>New Dataset</h2>
                             <form onSubmit={handleDatasetSubmit}>
                                 <label>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         placeholder="Name"
-                                        value={datasetName} 
-                                        onChange={(e) => setDatasetName(e.target.value)} 
+                                        value={datasetName}
+                                        onChange={(e) => setDatasetName(e.target.value)}
                                     />
                                 </label>
                                 <label>
@@ -188,11 +188,10 @@ const Datasets = () => {
                                         type="text"
                                         placeholder="Description"
                                         value={datasetDesc}
-                                        onChange={(e) => setDatasetDesc(e.target.value)} 
+                                        onChange={(e) => setDatasetDesc(e.target.value)}
                                     />
                                 </label>
-                                <br/>
-                                <button type="submit" style={{ color: "white" }}>Create</button>
+                                <button type="submit">Create</button>
                             </form>
                         </div>
                     </div>
@@ -204,10 +203,10 @@ const Datasets = () => {
                             <span className="close" onClick={handleCloseDeleteModal}>&times;</span>
                             <h2>Confirm Delete</h2>
                             <p>Are you sure you want to delete dataset: {selectedDataset?.name}?</p>
-                            <button onClick={handleConfirmDelete} className="delete-button" style={{ color: "white", "margin-right": "10px" }}>
+                            <button onClick={handleConfirmDelete} className="delete-button">
                                 Yes
                             </button>
-                            <button onClick={handleCloseDeleteModal} style={{ color: "white" }}>
+                            <button onClick={handleCloseDeleteModal}>
                                 No
                             </button>
                         </div>
@@ -220,18 +219,21 @@ const Datasets = () => {
                             <span className="close" onClick={handleCloseVisibilityModal}>&times;</span>
                             <h2>Confirm Visibility</h2>
                             <p>Are you sure you want to make the dataset: {selectedDataset?.name} {selectedDataset?.public ? 'private' : 'public'}?</p>
-                            <button onClick={handleConfirmToggleVisibility} className="delete-button" style={{ color: "white", "margin-right": "10px" }}>
+                            <button onClick={handleConfirmToggleVisibility} className="vis-button">
                                 Yes
                             </button>
-                            <button onClick={handleCloseVisibilityModal} style={{ color: "white" }}>
+                            <button onClick={handleCloseVisibilityModal}>
                                 No
                             </button>
                         </div>
                     </div>
                 )}
             </div>
-        </center>
+        </div>
     );
 };
 
+
+
 export default Datasets;
+
