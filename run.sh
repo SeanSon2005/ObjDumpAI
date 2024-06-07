@@ -3,6 +3,7 @@
 cleanup() {
 	echo "Cleaning up"
 	kill $(jobs -p)
+	pkill -f 'celery'
 	exit 0
 }
 
@@ -18,7 +19,8 @@ run_on_host() {
 	pipenv run python manage.py migrate
 	pipenv run python manage.py runserver &
 	echo "Starting Celery"
-	pipenv run python manage.py start_celery &
+	pipenv run celery -A backend worker --loglevel=info --pool=threads &
+	pipenv run celery -A backend beat --loglevel=info &
 	cd ..
 
 	echo "Starting frontend"
