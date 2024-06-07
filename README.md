@@ -6,8 +6,11 @@ ObjdumpAI is a full-stack web application that brings the computer vision commun
 
 - __Image Datasets:__ Users can create datasets by uploading their own images of any size and common type.
 - __AI Labeling:__ With an existing dataset, users can have their images automatically labeled by GroundingDINO, a transformer based encoder, decoder model.
+
 - __AI Image Descriptions:__ Automatically generate a sentence describing the user's images in detail, offering ideas on objects to look for and serving as a tag to search for specific images in your dataset.
+
 - __Custom Model Training:__ Modify and train a fully customizable object detection neural network on any dataset and as many times as needed with different object keywords.
+
 - __Public Dataset Search:__ Datasets can be optionally made public, allowing their descriptions and AI-generated tags to fuel a global search. Users can enter search terms and receive a list of datasets ranked by relevance. This feature enables users to discover datasets from others that match their interests, and view the profiles of dataset owners to explore their other public datasets.
 
 ## Notice
