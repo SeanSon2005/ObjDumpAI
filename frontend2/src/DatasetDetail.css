@@ -1,0 +1,139 @@
+.table-container {
+    max-height: 500px;
+	max-width: 1200px;
+    overflow-y: auto;
+    width: 80%;
+    margin: 0 auto;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #5095cc;
+}
+
+.detail-table {
+    width: 100%;
+    border-collapse: collapse;
+	table-layout: fixed;
+}
+
+.detail-table thead {
+    position: sticky;
+    top: 0;
+    background-color: #f1f1f1;
+    z-index: 1;
+}
+
+.detail-table th, .detail-table td {
+    border: 2px solid #3171c5;
+    padding: 8px;
+    text-align: center;
+	overflow-wrap: break-word;
+}
+
+.detail-table th {
+    background-color: rgb(245, 245, 245);
+    color: black;
+}
+
+.edit-button {
+	color: white;
+	margin-right: 8px;
+}
+
+.upload-button {
+    background-color: darkgreen;
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+	margin-right: 8px;
+}
+
+.label-button {
+    background-color: #b58b00;
+    color: white;
+    padding: 10px;
+    margin-bottom: 20px;
+	margin-right: 8px;
+}
+
+.text-hl {
+    color: black;
+	font-size: 110%;
+}
+
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 10px; 
+    color:#ddd
+}
+
+.modal-content {
+    background-color: #b0e0fa;
+    padding: 40px;
+    border: 2px solid white;
+    width: 300px;
+    text-align: center;
+	position: relative;
+    border-radius: 50px; 
+    height: 326px;
+}
+
+.modal-image {
+    width: 100%;
+    height: auto;
+}
+
+.close {
+    color: #d11717;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: darkred;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.detail-table th:nth-child(1), .detail-table td:nth-child(1) {
+    width: 10%;
+    color:#117bb4;
+}
+
+.detail-table th:nth-child(2), .detail-table td:nth-child(2) {
+    width: 20%;
+}
+
+.detail-table th:nth-child(3), .detail-table td:nth-child(3) {
+    width: 40%;
+    
+}
+
+.detail-table th:nth-child(4), .detail-table td:nth-child(4) {
+    width: 20%;
+}
+
+.image-link {
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #000058;
+}
+
+.image-link:hover {
+    color: white;
+    background-color: black;
+}
