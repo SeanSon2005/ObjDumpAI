@@ -14,6 +14,7 @@ run_on_host() {
 
 	echo "Starting backend server"
 	cd backend
+	pipenv install
 	pipenv run python manage.py migrate
 	pipenv run python manage.py runserver &
 	echo "Starting Celery"
