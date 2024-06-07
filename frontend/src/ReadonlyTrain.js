@@ -47,10 +47,6 @@ const ReadonlyTrain = () => {
         }
     }, [datasetId, navigate, fetchTrainings, datasetMeta]);
 
-    const handleCreateClick = () => {
-        setShowCreateModal(true);
-    };
-
     const handleSaveTraining = (e) => {
         e.preventDefault();
         const validKeywords = keywords.filter(kw => kw.trim().length > 0 && !kw.includes(',') && kw.length <= 20);
@@ -95,11 +91,6 @@ const ReadonlyTrain = () => {
     const removeKeywordField = (index) => {
         const newKeywords = keywords.filter((_, i) => i !== index);
         setKeywords(newKeywords);
-    };
-
-    const handleDeleteClick = (training) => {
-        setSelectedTraining(training);
-        setShowDeleteModal(true);
     };
 
     const handleConfirmDelete = () => {

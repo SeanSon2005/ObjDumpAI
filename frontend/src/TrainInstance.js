@@ -42,21 +42,22 @@ const TrainInstance = () => {
                 console.error(error);
             });
     };
+
 	const downloadModel = () => {
-    axios.get(`/api/trainings/${trainingId}/model/`, { responseType: 'blob' })
-        .then(response => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `model_${trainingId}.pth`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-        })
-        .catch(error => {
-            setError("There was an error downloading the model.");
-            console.error(error);
-        });
+		axios.get(`/api/trainings/${trainingId}/model/`, { responseType: 'blob' })
+			.then(response => {
+				const url = window.URL.createObjectURL(new Blob([response.data]));
+				const link = document.createElement('a');
+				link.href = url;
+				link.setAttribute('download', `model_${trainingId}.pth`);
+				document.body.appendChild(link);
+				link.click();
+				link.remove();
+			})
+			.catch(error => {
+				setError("There was an error downloading the model.");
+				console.error(error);
+			});
 	};
 
     const calculateElapsedTime = () => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from './axiosConfig';
 import './DatasetReadonly.css';
@@ -7,23 +7,14 @@ const DatasetReadonly = () => {
     const { datasetId } = useParams();
     const navigate = useNavigate();
     const [photos, setPhotos] = useState([]);
-    const [selectedPhoto, setSelectedPhoto] = useState(null);
     const [error, setError] = useState(null);
     const [showImageModal, setShowImageModal] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
 	const [datasetName, setDatasetName] = useState(null);
 	const [ownerId, setOwnerId] = useState(null);
 
-    useEffect(() => {
-        if (!localStorage.getItem('token') || !localStorage.getItem('username')) {
-            navigate('/');
-        } else {
-			datasetMeta();
-            fetchPhotos();
-        }
-    }, [datasetId, navigate]);
-
-	const datasetMeta = () => {
+    
+	const datasetMeta = useCallback(() => {
 		if(!datasetName || !ownerId) {
 			axios.get(`/api/datasets/${datasetId}/public/`)
 				.then(response => {
@@ -35,9 +26,9 @@ const DatasetReadonly = () => {
 					console.error(error);
 				})
 		}
-	}
+	}, [datasetId, datasetName, ownerId]);
 
-    const fetchPhotos = () => {
+	const fetchPhotos = useCallback(() => {
         axios.get(`/api/datasets/${datasetId}/photos/`)
             .then(response => {
                 setPhotos(response.data);
@@ -46,7 +37,17 @@ const DatasetReadonly = () => {
                 setError("There was an error fetching the dataset.");
                 console.error(error);
             });
-    };
+    }, [datasetId]);
+
+	useEffect(() => {
+        if (!localStorage.getItem('token') || !localStorage.getItem('username')) {
+            navigate('/');
+        } else {
+			datasetMeta();
+            fetchPhotos();
+        }
+    }, [navigate, datasetMeta, fetchPhotos]);
+
 
     const handleFilenameClick = (photo, event) => {
         event.preventDefault();
