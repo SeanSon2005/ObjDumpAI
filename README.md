@@ -12,16 +12,7 @@ ObjdumpAI is a full-stack web application that brings the computer vision commun
 
 ## Notice
 
-AI tasks will benefit greatly from an NVIDIA GPU, development was done on an RTX 3090 with cuda 12.2
-
-## Technologies
-- React
-- Django
-- SQLite
-- Celery
-- Redis
-- GroundingDINO
-- BLIP
+AI-related tasks will perform significantly faster with an NVIDIA GPU, development was done on an RTX 3090 with cuda 12.2
 
 ## Setup
 
@@ -78,6 +69,15 @@ Celery will require a local `redis` server on port `6379`.
 This can be started with `redis-server` if the `redis` package is installed on Debian.
 
 The frontend will be accessible in a browser at `http://localhost:3000` after proper setup.
+
+## Technologies
+- React
+- Django
+- SQLite
+- Celery
+- Redis
+- GroundingDINO
+- BLIP
 
 ## Authors
 
