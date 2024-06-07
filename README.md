@@ -36,9 +36,9 @@ sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
 If an NVIDIA GPU is not detected, the Docker will be run with CPU only.
-To run the CPU Docker without `./run.sh DOCKER`, you can simply run `docker compose up --build` in the root directory of the repository. Note that if one of the required ports is already being used, which is a common issue if you have a system wide `redis` running, the Docker run will fail, and you will need to end this local `redis` instance first.
+To run the CPU Docker without `./run.sh DOCKER`, you can simply run `docker compose up --build` in the root directory of the repository. Note that if one of the required ports is already being used, which is a common issue if you have a system-wide `redis` running, the Docker run will fail, and you will need to end this instance first.
 Even with GPU pass-through, running on Docker will be significantly slower than running each component on your host machine.
-If you try mixing runs with Docker and without Docker, permissions on `backend/db.sqlite3` and files within `backend/protected_media` may cause issues, so it's reccommended to not mix runs, and if you do, change the owner on all of these files to your user (or just delete them), since within Docker they will be created and written to as root.
+If you try mixing runs with Docker and without Docker, permissions on `backend/db.sqlite3` and files within `backend/protected_media` may cause issues, so it's reccommended to not mix runs, and if you do, change the owner on all of these files to your user (or delete them), since within Docker they will be created and written to as root.
 
 ### Running without Docker
 If you are on a Linux system with sufficient packages, Docker may not be needed.
@@ -46,7 +46,7 @@ Verify that you have the correct packages by inspecting the requirements of `bac
 and additionally ensure that you have the `redis` and `celery` packages as well as a recent `nodejs` version with `npm`.
 
 Running `./run.sh` (without the DOCKER argument) will attempt to start each required component on the host machine. If you are having issues with this,
-you can see below how individual components can be run.
+you can see how individual components can be run below.
 
 The frontend component can be run as follows:
 ```bash
