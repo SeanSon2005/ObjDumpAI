@@ -36,7 +36,7 @@ sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
 If an NVIDIA GPU is not detected, the Docker will be run with CPU only.
-To run the CPU Docker without `./run.sh`, you can simply run `UID=${UID} GID=${GID} docker compose up --build` in the root directory of the repository.
+To run the CPU Docker without `./run.sh`, you can simply run `docker compose up --build` in the root directory of the repository.
 Note that even with GPU passthrough, running on Docker will be significantly slower than running each component directly.
 
 ### Running without Docker
