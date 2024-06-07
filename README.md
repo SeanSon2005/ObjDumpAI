@@ -4,15 +4,15 @@ ObjdumpAI is a full-stack web application that brings the computer vision commun
 
 ## Features
 
-- <ins>__Image Datasets:__</ins> Users can create datasets by uploading their own images of any size and common type.
+- __Image Datasets:__ Users can create datasets by uploading their own images of any size and common type.
 
-- <ins>__AI Labeling:__</ins> With an existing dataset, users can have objects within their images automatically boxed and labeled from a set of user-supplied keywords by GroundingDINO, a transformer based encoder, decoder model.
+- __AI Labeling:__ With an existing dataset, users can have objects within their images automatically boxed and labeled from a set of user-supplied keywords by GroundingDINO, a transformer based encoder, decoder model.
 
-- <ins>__AI Image Tagging:__</ins> Users can choose to have the images in their dataset automatically described with short sentences. These image tags serve as helpful search terms.
+- __AI Image Tagging:__ Users can choose to have the images in their dataset automatically described with short sentences. These image tags serve as helpful search terms.
 
-- <ins>__Custom Model Training:__</ins> Train a fully customizable object detection neural network on a dataset with a set of user-supplied object keywords as many times as needed.
+- __Custom Model Training:__ Train a fully customizable object detection neural network on a dataset with a set of user-supplied object keywords as many times as needed.
 
-- <ins>__Public Dataset Search:__</ins> Datasets can be optionally made public, allowing their descriptions and AI-generated tags to fuel a global search. Users can enter search terms and receive a list of datasets ranked by relevance. This feature enables users to discover datasets from others that match their interests, and view the profiles of dataset owners to explore their other public datasets.
+- __Public Dataset Search:__ Datasets can be optionally made public, allowing their descriptions and AI-generated tags to fuel a global search. Users can enter search terms and receive a list of datasets ranked by relevance. This feature enables users to discover datasets from others that match their interests, and view the profiles of dataset owners to explore their other public datasets.
 
 ## Notice
 

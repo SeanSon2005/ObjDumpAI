@@ -206,7 +206,7 @@ const Datasets = () => {
                             <button onClick={handleConfirmDelete} className="delete-button">
                                 Yes
                             </button>
-                            <button onClick={handleCloseDeleteModal}>
+                            <button onClick={handleCloseDeleteModal} style={{ color: "white" }}>
                                 No
                             </button>
                         </div>
@@ -219,10 +219,10 @@ const Datasets = () => {
                             <span className="close" onClick={handleCloseVisibilityModal}>&times;</span>
                             <h2>Confirm Visibility</h2>
                             <p>Are you sure you want to make the dataset: {selectedDataset?.name} {selectedDataset?.public ? 'private' : 'public'}?</p>
-                            <button onClick={handleConfirmToggleVisibility} className="vis-button">
+                            <button onClick={handleConfirmToggleVisibility} className="delete-button">
                                 Yes
                             </button>
-                            <button onClick={handleCloseVisibilityModal}>
+                            <button onClick={handleCloseVisibilityModal} style={{ color: "white" }}>
                                 No
                             </button>
                         </div>
