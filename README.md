@@ -24,8 +24,8 @@ In order to run a local instance of ObjdumpAI, first clone this repository.
 All setup anticipates a Linux environment. Windows users should use WSL.
 
 ### Running with Docker
-The `./run.sh` script will detect if an NVIDIA GPU is present and attempt to run the Docker setup
-with GPU passthrough. The GPU Dockerfile requires CUDA 12.2, but it can be manually edited in
+The `./run.sh DOCKER` script will detect if an NVIDIA GPU is present and attempt to run the Docker setup
+with GPU pass-through. The GPU Dockerfile requires CUDA 12.2, but it can be manually edited in
 `backend/Docker.gpu` to fit your CUDA version (although the AI pipeline may not support certain older CUDA versions).
 Using the GPU Dockerfile requires the nvidia-docker2 package.
 For Debian based distributions, it can be installed as follows:
@@ -36,13 +36,17 @@ sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
 If an NVIDIA GPU is not detected, the Docker will be run with CPU only.
-To run the CPU Docker without `./run.sh`, you can simply run `docker compose up --build` in the root directory of the repository.
-Note that even with GPU passthrough, running on Docker will be significantly slower than running each component directly.
+To run the CPU Docker without `./run.sh DOCKER`, you can simply run `docker compose up --build` in the root directory of the repository. Note that if one of the required ports is already being used, which is a common issue if you have a system wide `redis` running, the Docker run will fail, and you will need to end this local `redis` instance first.
+Even with GPU pass-through, running on Docker will be significantly slower than running each component on your host machine.
+If you try mixing runs with Docker and without Docker, permissions on `backend/db.sqlite3` and files within `backend/protected_media` may cause issues, so it's reccommended to not mix runs, and if you do, change the owner on all of these files to your user (or just delete them), since within Docker they will be created and written to as root.
 
 ### Running without Docker
 If you are on a Linux system with sufficient packages, Docker may not be needed.
 Verify that you have the correct packages by inspecting the requirements of `backend/Dockerfile.cpu`,
 and additionally ensure that you have the `redis` and `celery` packages as well as a recent `nodejs` version with `npm`.
+
+Running `./run.sh` (without the DOCKER argument) will attempt to start each required component on the host machine. If you are having issues with this,
+you can see below how individual components can be run.
 
 The frontend component can be run as follows:
 ```bash
@@ -51,7 +55,7 @@ npm install
 npm start
 ```
 The frontend Dockerfile can also be used individually, and this is reccommended
-due to the ridiculousness of `npm`. This can be done with the following command:
+due to the unreliability of `npm`. This can be done with the following command:
 `docker run -p 3000:80 $(docker build -q ./frontend)`
 
 The backend server can be run as follows:
