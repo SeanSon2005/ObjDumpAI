@@ -12,5 +12,11 @@ class Command(BaseCommand):
     help = "Start Celery worker and beat"
 
     def handle(self, *args, **kwargs):
-        start_worker()
-        start_beat()
+        worker_process = multiprocessing.Process(target=start_worker)
+        beat_process = multiprocessing.Process(target=start_beat)
+
+        worker_process.start()
+        beat_process.start()
+
+        worker_process.join()
+        beat_process.join()

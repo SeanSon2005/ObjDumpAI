@@ -40,8 +40,9 @@ class Tag_Generator:
     def __init__(self, input_path: str = "data/images", output_path: str = "data"):
         self.input_path = input_path
         self.output_path = output_path
+        self.mode = "cuda" if torch.cuda.is_available() else "cpu"
         self.processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-        self.model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to("cuda")
+        self.model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(self.mode)
 
     def tag(self, input_images=None, output: bool = True):
         if input_images:
@@ -52,7 +53,7 @@ class Tag_Generator:
         descriptions = []
         for img_path, batch in image_dataset:
             raw_image = Image.fromarray(batch).convert('RGB')
-            inputs = self.processor(raw_image, return_tensors="pt").to("cuda")
+            inputs = self.processor(raw_image, return_tensors="pt").to(self.mode)
             out = self.model.generate(**inputs)
             description = self.processor.decode(out[0], skip_special_tokens=True)
             base_name = os.path.basename(img_path)

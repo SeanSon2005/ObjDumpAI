@@ -1,8 +1,0 @@
-2024-06-06 00:56:30 - celery.redirected - WARNING - Using seed    : 24
-2024-06-06 00:56:30 - program - INFO - Using seed    : 24
-2024-06-06 00:56:30 - celery.redirected - WARNING - Using device  : cuda
-2024-06-06 00:56:30 - program - INFO - Using device  : cuda
-2024-06-06 00:56:30 - celery.redirected - WARNING - Task profiles.tasks.train_model[0aef3618-eda5-4484-8165-d0e168c341c0] succeeded in 1.4491455549996317s: {'message': 'Training failed', 'error': '[Errno 2] No such file or directory: \'/home/enzo/src/hw/good/SAMforEmbeddedDevices/backend/protected_media/training/1/18/17/images\''}
-2024-06-06 00:56:30 - celery.app.trace - INFO - Task profiles.tasks.train_model[0aef3618-eda5-4484-8165-d0e168c341c0] succeeded in 1.4491455549996317s: {'message': 'Training failed', 'error': '[Errno 2] No such file or directory: \'/home/enzo/src/hw/good/SAMforEmbeddedDevices/backend/protected_media/training/1/18/17/images\''}
-2024-06-06 00:58:27 - celery.redirected - WARNING - Task profiles.tasks.train_model[2fe0e1d8-cded-404b-9203-7cc022974e39] received
-2024-06-06 00:58:27 - celery.worker.strategy - INFO - Task profiles.tasks.train_model[2fe0e1d8-cded-404b-9203-7cc022974e39] received

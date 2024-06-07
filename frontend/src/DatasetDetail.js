@@ -84,7 +84,7 @@ const DatasetDetail = () => {
                     setError("There was an error checking the task status.");
                     console.error(error);
                 });
-        }, 5000);
+        }, 1000);
     };
 
     const deleteTask = (taskId) => {

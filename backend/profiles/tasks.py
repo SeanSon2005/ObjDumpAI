@@ -12,13 +12,11 @@ import json
 from celery.utils.log import get_task_logger
 from .config import DEFAULT_CONFIG
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'pipeline'))
+
+from pipeline import Pipeline
+
 logger = get_task_logger(__name__)
-
-pipeline_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../pipeline"))
-if pipeline_path not in sys.path:
-    sys.path.append(pipeline_path)
-
-import pipeline
 
 @shared_task
 def cleanup_failed_tasks():
@@ -46,7 +44,7 @@ def train_model(self, training_id):
         for photo in dataset.photos.all():
             shutil.copy(photo.image.path, os.path.join(training_dir, "images"))
 
-        pipeline_instance = pipeline.Pipeline(training_dir)
+        pipeline_instance = Pipeline(training_dir)
 
         config = DEFAULT_CONFIG
         config["data_loader"]["args"]["data_dir"] = training_dir
@@ -75,7 +73,7 @@ def train_model(self, training_id):
 @shared_task(bind=True, max_retries=0)
 def label_dataset(self, user_id, dataset_id):
     try:
-        pipeline_instance = pipeline.Pipeline(".")
+        pipeline_instance = Pipeline(".")
         img_path = os.path.join(settings.PROTECTED_MEDIA_ROOT, f"{user_id}/{dataset_id}/")
         tags = pipeline_instance.generate_tags(img_path)
         

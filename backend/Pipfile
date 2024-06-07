@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+celery = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
+pyyaml = "*"
+numpy = "*"
+torch = "*"
+matplotlib = "*"
+ultralytics = "*"
+autodistill-grounding-dino = "*"
+roboflow = "*"
+redis = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.10"
